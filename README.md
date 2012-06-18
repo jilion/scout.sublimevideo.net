@@ -3,11 +3,11 @@
 ### (Ultra) Quick setup
 
 ```bash
-cd $JILION_PATH/Products/SublimeVideo \
-&& git clone git@github.com:jilion/scout.sublimevideo.net.git \
-&& jsau && scsv && bi \
-&& powder link && cd ~/.pow && mv scout.sublimevideo.net scout.sublimevideo \
-&& scsv
+cd $JILION_PATH/Products/SublimeVideo && \
+git clone git@github.com:jilion/scout.sublimevideo.net.git && \
+jsau && scsv && bi && \
+powder link && cd ~/.pow && mv scout.sublimevideo.net scout.sublimevideo && \
+scsv
 ```
 
 Visit `scout.sublimevideo.dev`!
