@@ -1,0 +1,23 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  time:
+    am: AM # fundamental !!!!!!!!
+    pm: PM # fundamental !!!!!!!!
+    formats:
+      tweet: "%b %{ordinal_day} %Y"
+      deal: "%B %{ordinal_day}, %Y"
+      feed: "%B %d, %Y - %H:%M"
+      date: "%B %e, %Y"
+      named_date: "%a, %e %b %Y"
+      minutes: "%d %b %Y, %R"
+      minutes_y: "%d %b %y, %R"
+      minutes_timezone: "%d %b %Y, %R %Z"
+      seconds_timezone: "%d %b %Y, %R:%S %Z"
+      seconds_timezone_y: "%d %b %y, %R:%S %Z"
+      month_fullyear: "%B %Y"
+      Y_m_d: "%Y-%m-%d"
+      d_b_Y: "%d %b %Y"
+      b_Y: "%b %Y"
+      year_month_day: "%Y %b %d"

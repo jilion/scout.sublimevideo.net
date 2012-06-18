@@ -1,0 +1,16 @@
+- images = []
+- @screenshoted_sites.entries.each do |screenshoted_site|
+  - if screnshot = screenshoted_site.screenshots.latest
+    - images << { link: screnshot.u, thumb: screnshot.f.url(:carousel), zoom: screnshot.f.url(:carousel) }
+
+javascript:
+  $(document).ready(function(){
+    snowstack_init();
+    images = #{raw images.to_json};
+    // options = { rows: 2, captions: true };
+    for(var i = 0; i < images.length; i++) {
+      snowstack_addimage(images[i]);
+    }
+    updateStack(1);
+  });
+  

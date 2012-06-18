@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    title SublimeVideo Scout
+    = stylesheet_link_tag    'application', media: 'all'
+    = yield :stylesheet
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+
+  body
+    .page.view
+      .origin.view
+        #camera.view
+          #dolly.view
+            #stack.view
+            #mirror.view
+              #rstack.view
+
+    #caption.caption up/down to change day/week, left/rigth arrows to move, space toggles magnify, v to change view
+
+    = yield
+
+    div id="footer"
+      | Copyright © 2012 Jilion

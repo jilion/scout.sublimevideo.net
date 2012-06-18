@@ -1,0 +1,12 @@
+= content_for :stylesheet do
+  = stylesheet_link_tag 'snowstack'
+
+h1= "New Sites on #{l(@day, format: :d_b_Y)}"
+
+= form_tag "/new_sites/#{l(@day - 1.day, format: :Y_m_d)}", method: 'get', id: 'backward' do
+ = submit_tag '-'
+
+= form_tag "/new_sites/#{l(@day + 1.day, format: :Y_m_d)}", method: 'get', id: 'forward' do
+ = submit_tag '+'
+
+= render 'carousel'
