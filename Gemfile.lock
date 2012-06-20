@@ -8,6 +8,15 @@ GIT
       thor (>= 0.14.6)
 
 GIT
+  remote: git://github.com/jilion/phantomjs.rb.git
+  revision: 012f0e0fe31f857cf86bf60393569690622619b2
+  specs:
+    phantomjs.rb (0.0.4)
+      phantomjs-linux
+      phantomjs-linux64
+      phantomjs-mac
+
+GIT
   remote: git://github.com/jnicklas/carrierwave-mongoid.git
   revision: ccbec883f6443a6bc05341a4863c0ffe8db40d05
   branch: mongoid-3.0
@@ -186,9 +195,9 @@ GEM
     origin (1.0.0)
     orm_adapter (0.2.0)
     pg (0.13.2)
+    phantomjs-linux (0.0.2)
+    phantomjs-linux64 (0.0.3)
     phantomjs-mac (0.0.3)
-    phantomjs.rb (0.0.4)
-      phantomjs-mac
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -353,7 +362,7 @@ DEPENDENCIES
   mini_magick (~> 3.4.0)
   mongoid (~> 3.0.0.rc)
   pg (~> 0.13.2)
-  phantomjs.rb (>= 0.0.4)
+  phantomjs.rb!
   pry-rails
   quiet_assets
   rack-livereload
