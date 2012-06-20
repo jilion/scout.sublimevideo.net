@@ -1,5 +1,9 @@
 class ScoutSublimeVideo.Carousel
   constructor: (images, @options) ->
+    if images.length is 0
+      console.log 'No images'
+      return
+
     _.defaults @options,
       rows: 1, rowHeight: window.innerHeight / 3,
       cellRatio: 300 / 180, cellGap: 10,
