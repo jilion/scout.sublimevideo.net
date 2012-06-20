@@ -5,7 +5,8 @@ require File.expand_path('lib/screenshot_grabber')
 describe ScreenshotGrabber do
   before do
     stub_rails
-    stub_class 'ScreenshotedSite', 'Screenshot'#, 'Site', 'Referrer'
+    stub_class 'ScreenshotedSite', 'Screenshot'
+    screenshot_grabber.stub(logger: '')
   end
 
   let(:screenshot_grabber) { described_class.new(site_token) }
@@ -25,7 +26,7 @@ describe ScreenshotGrabber do
         screenshot_grabber.should_receive(:with_tempfile_image).and_yield(image)
       end
 
-      it 'create a Screenshot with the image', :focus do
+      it 'create a Screenshot with the image' do
         Screenshot.should_receive(:create!).with(
           site: screenshoted_site,
           u: url,
@@ -39,7 +40,7 @@ describe ScreenshotGrabber do
 
   describe '#take_screenshot!' do
     it 'adds the screenshot to the ScreenshotedSite\'s screenshots collection and save it' do
-      Phantomjs.should_receive(:run).with(Rails.root.join('lib', 'phantomjs', 'rasterize.js').to_s, url, 'tmp/foo.jpg')
+      screenshot_grabber.should_receive(:system).with("phantomjs #{Rails.root.join('lib', 'phantomjs-scripts', 'rasterize.js').to_s} #{url} tmp/foo.jpg")
 
       screenshot_grabber.take_screenshot!(url, stub(path: 'tmp/foo.jpg'))
     end
