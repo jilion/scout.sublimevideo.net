@@ -1,4 +1,5 @@
 .yardoc
-/config/env.yml
-/doc
-/public/uploads
+config/env.yml
+doc
+public/uploads
+public/assets
