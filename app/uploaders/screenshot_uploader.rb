@@ -37,7 +37,7 @@ class ScreenshotUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
-    pretty_filename = super.chomp(File.extname(super)).parameterize
+    pretty_filename = model.u.gsub(%r{http://}, '').parameterize
     "#{Time.now.utc.to_i}-#{pretty_filename}.#{file.extension}" if original_filename
   end
 

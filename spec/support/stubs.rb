@@ -11,7 +11,18 @@ def stub_rails
     Object.class_eval <<-END
     module Rails
       def self.root; Pathname.new(File.expand_path('')); end
+      def self.public_path; Pathname.new(File.expand_path('/public')); end
       def self.env; 'test'; end
+      def self.logger
+        o = OpenStruct.new
+        def o.info(*args)
+          puts args
+        end
+        def o.error(*args)
+          puts args
+        end
+        o
+      end
     end
     END
   end

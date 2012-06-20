@@ -14,7 +14,7 @@ RSpec.configure do |config|
     }
 
     unless $fog_connection
-      $fog_connection = Fog::Storage.new(:provider => 'AWS')
+      $fog_connection = Fog::Storage.new(provider: 'AWS')
       $fog_connection.directories.create(key: ENV['S3_SCREENSHOTS_BUCKET'])
     end
   end

@@ -1,18 +1,23 @@
 require 'fast_spec_helper'
-require 'rails/railtie'
-require 'fog'
 require 'carrierwave'
 require File.expand_path('spec/config/carrierwave')
-require File.expand_path('spec/support/fixtures_helpers')
-
 require File.expand_path('app/uploaders/screenshot_uploader')
 
 describe ScreenshotUploader do
+  before do
+    stub_rails
+    uploader.store!(image)
+  end
+  after do
+    uploader.remove!
+    Dir.delete(Rails.root.join('uploads', 'screenshots'))
+    Dir.delete(Rails.root.join('uploads', 'tmp'))
+    Dir.delete(Rails.root.join('uploads'))
+  end
+
   let(:screenshot) { stub(site: stub(t: 'site_token'), u: 'http://sublimevideo.net') }
   let(:image)      { fixture_file('sublimevideo.net.jpg') }
   let(:uploader)   { described_class.new(screenshot, :f) }
-
-  before { uploader.store!(image) }
 
   it "is stored in ENV['S3_SCREENSHOTS_BUCKET'] bucket" do
     uploader.fog_directory.should eq ENV['S3_SCREENSHOTS_BUCKET']
