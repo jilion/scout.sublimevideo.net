@@ -27,3 +27,11 @@ The app uses the same databases as my.sublimevideo.net so if you have some `Site
 - run `foreman start`.
 
 You can then view the Sidekiq queue at `localhost:5000/sidekiq` (you'll have to log-in as in admin.sublimevideo.net).
+
+## Deploy
+
+```shell
+$ heroku config:add PATH=bin:vendor/phantomjs/bin:vendor/bundle/ruby/1.9.1/bin:/usr/local/bin:/usr/bin:/bin LD_LIBRARY_PATH=vendor/phantomjs/lib:/usr/local/lib:/usr/lib:/lib
+
+$ gp production
+```
