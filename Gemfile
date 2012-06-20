@@ -15,7 +15,7 @@ gem 'fog',                 '~> 1.3.1'
 gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/processing/mime_types']
 gem 'carrierwave-mongoid', github: 'digitalplaywright/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
 gem 'mini_magick',         '~> 3.4.0'
-gem 'sidekiq',             '~> 2.0.1'
+gem 'sidekiq',             '~> 2.0.2'
 gem 'phantomjs.rb',        '>= 0.0.4'
 
 # Auth / invitations
