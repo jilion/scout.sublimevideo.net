@@ -8,15 +8,6 @@ GIT
       thor (>= 0.14.6)
 
 GIT
-  remote: git://github.com/jilion/phantomjs.rb.git
-  revision: 012f0e0fe31f857cf86bf60393569690622619b2
-  specs:
-    phantomjs.rb (0.0.4)
-      phantomjs-linux
-      phantomjs-linux64
-      phantomjs-mac
-
-GIT
   remote: git://github.com/jnicklas/carrierwave-mongoid.git
   revision: ccbec883f6443a6bc05341a4863c0ffe8db40d05
   branch: mongoid-3.0
@@ -89,6 +80,7 @@ GEM
     celluloid (0.11.0)
     childprocess (0.3.2)
       ffi (~> 1.0.6)
+    closure-compiler (1.1.6)
     coderay (1.0.6)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -195,9 +187,6 @@ GEM
     origin (1.0.0)
     orm_adapter (0.2.0)
     pg (0.13.2)
-    phantomjs-linux (0.0.2)
-    phantomjs-linux64 (0.0.3)
-    phantomjs-mac (0.0.3)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -321,9 +310,6 @@ GEM
       mime-types
       mime-types
     tzinfo (0.3.33)
-    uglifier (1.2.4)
-      execjs (>= 0.3.0)
-      multi_json (>= 1.0.2)
     warden (1.2.1)
       rack (>= 1.0)
     webmock (1.6.4)
@@ -344,6 +330,7 @@ DEPENDENCIES
   capybara-webkit
   carrierwave (~> 0.6.2)
   carrierwave-mongoid!
+  closure-compiler (~> 1.1.6)
   coffee-rails (~> 3.2.2)
   coolline
   database_cleaner
@@ -362,7 +349,6 @@ DEPENDENCIES
   mini_magick (~> 3.4.0)
   mongoid (~> 3.0.0.rc)
   pg (~> 0.13.2)
-  phantomjs.rb!
   pry-rails
   quiet_assets
   rack-livereload
@@ -378,6 +364,5 @@ DEPENDENCIES
   squeel (~> 1.0.6)
   thin
   typhoeus (~> 0.2)
-  uglifier (>= 1.0.3)
   webmock (~> 1.6)
   wirble
