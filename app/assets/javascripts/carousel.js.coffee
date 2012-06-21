@@ -15,8 +15,9 @@ class ScoutSublimeVideo.Carousel
     @cxspacing  = @cellWidth + @options['cellGap']
     @cyspacing  = @cellHeight + @options['cellGap']
 
-    @dolly  = $('#dolly')[0]
-    @camera = $('#camera')[0]
+    @dolly  = $('#dolly')
+    @camera = $('#camera')
+    @stack  = $('#stack')
 
     @cells            = []
     @currentCellIndex = -1
@@ -31,33 +32,37 @@ class ScoutSublimeVideo.Carousel
     this.updateStack(1)
 
   addImage: (info) ->
-    cell  = {}
+    cell  = { info: info }
     cellIndex = @cells.length
     @cells.push(cell)
 
-    x = Math.floor(cellIndex / @options['rows'])
-    y = cellIndex - x * @options['rows']
+    col = Math.floor(cellIndex / @options['rows'])
+    row = cellIndex - col * @options['rows']
 
-    cell.info = info
+    cell.div = $("<div class='cell fader view original' style='opacity: 0' data-stack-index='#{cellIndex}'></div>").css
+      width: @cellWidth
+      height: @cellHeight
+      webkitTransform: this.translate3d(col * @cxspacing, row * @cyspacing, 0)
 
-    cell.div = $('<div class="cell fader view original" style="opacity: 0"></div>').width(@cellWidth).height(@cellHeight)
-    cell.div[0].style.webkitTransform = this.translate3d(x * @cxspacing, y * @cyspacing, 0)
+    img = $('<img />')
 
-    img = document.createElement('img')
-
-    $(img).load =>
-      this.sizeAndPositionImageInCell(img, cell.div[0])
-      cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img)
+    img.on 'load', =>
+      this.sizeAndPositionImageInCell(img, cell.div)
+      cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img[0])
       # cell.div.append(img)
       cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{cell.info.hostname}</a>")
       cell.div.append $("<ul class='info'><li><span class='i_f'>v</span> <em>Views: #{cell.info.views}</em></li><li><span class='i_f'>m</span> <em>Video tags: #{cell.info.video_tags}</em></li></ul>")
       cell.div.css 'opacity', 1
+      this.addCellToStack(cell, row)
 
-    img.src = info.thumb
+    img.on 'error', =>
+      img.attr 'src', '/no-screenshot.png'
 
-    $('#stack').append(cell.div)
+    img.attr 'src', info.thumb
 
-    this.addReflectionToCell(cell) if y is @options['rows'] - 1
+  addCellToStack: (cell, row) ->
+    @stack.append(cell.div)
+    this.addReflectionToCell(cell) if row is @options['rows'] - 1
 
   addReflectionToCell: (cell) ->
     if @options['reflection']
@@ -69,39 +74,53 @@ class ScoutSublimeVideo.Carousel
     this.applyPerspective()
 
   moveDollyToCellIndex: (cellIndex) ->
-    @dolly.style.webkitTransform = this.cameraTransformForCellIndex(cellIndex)
+    @dolly.css 'webkitTransform', this.cameraTransformForCellIndex(cellIndex)
 
   applyPerspective: ->
     if @options['perspective']
-      currentMatrix = new WebKitCSSMatrix(document.defaultView.getComputedStyle(@dolly, null).webkitTransform)
-      targetMatrix  = new WebKitCSSMatrix(@dolly.style.webkitTransform)
+      currentMatrix = new WebKitCSSMatrix document.defaultView.getComputedStyle(@dolly[0], null).webkitTransform
+      targetMatrix  = new WebKitCSSMatrix @dolly.css('webkitTransform')
 
       dx    = currentMatrix.e - targetMatrix.e
       angle = Math.min(Math.max(dx / (@cxspacing * 1.0), -1), @options['rows']) * 45;
 
-      @camera.style.webkitTransform = "rotateY(#{angle}deg)"
-      @camera.style.webkitTransitionDuration = '330ms'
+      @camera.css
+        webkitTransform: "rotateY(#{angle}deg)"
+        webkitTransitionDuration: '330ms'
 
       clearTimeout(@currentTimer) if @currentTimer
 
       @currentTimer = setTimeout ->
-        @camera.style.webkitTransform = 'rotateY(0)'
-        @camera.style.webkitTransitionDuration = '5s'
+        @camera.css
+          webkitTransform: 'rotateY(0)'
+          webkitTransitionDuration: '5s'
       , 330
 
   sizeAndPositionImageInCell: (image, cell) ->
-    imgWidth   = image.width
-    imgHeight  = image.height
-    cellWidth  = $(cell).width()
-    cellHeight = $(cell).height()
+    imgWidth   = image[0].width
+    imgHeight  = image[0].height
+    cellWidth  = cell.width()
+    cellHeight = cell.height()
+    # console.log("img: #{imgWidth}x#{imgHeight}");
+    # console.log("cell: #{cellWidth}x#{cellHeight}");
+    # console.log("cellHeight / imgHeight: #{cellHeight / imgHeight}");
+    # console.log("cellWidth / imgWidth: #{cellWidth / imgWidth}");
+    # console.log("window.innerWidth: #{window.innerWidth}");
+    # console.log("window.innerHeight: #{window.innerHeight}");
     ratio      = Math.min(cellHeight / imgHeight, cellWidth / imgWidth)
     imgWidth  *= ratio
     imgHeight *= ratio
 
-    image.style.width  = "#{Math.round(imgWidth)}px"
-    image.style.height = "#{Math.round(imgHeight)}px"
-    image.style.left   = "#{Math.round((cellWidth - imgWidth) / 2)}px"
-    image.style.top    = "#{Math.round((cellHeight - imgHeight) / 2)}px"
+    # console.log("imgWidth: #{Math.round(imgWidth)}");
+    # console.log("imgHeight: #{Math.round(imgHeight)}");
+    # console.log("zoomed imgWidth: #{Math.round(imgWidth) * 2}");
+    # console.log("zoomed imgHeight: #{Math.round(imgHeight) * 2}");
+
+    image.css
+      width:  "#{Math.round(imgWidth)}px"
+      height: "#{Math.round(imgHeight)}px"
+      left:   "#{Math.round((cellWidth - imgWidth) / 2)}px"
+      top:    "#{Math.round((cellHeight - imgHeight) / 2)}px"
 
   updateCurrentCell: (newCellIndex) ->
     this.unselectCurrentCell()
@@ -125,18 +144,37 @@ class ScoutSublimeVideo.Carousel
   magnifyCurrentCell: ->
     if @magnifyMode
       @currentCell.div.addClass 'magnify'
-      this.zoomCurrentCell()
+      this.loadZoomedImage()
 
-  zoomCurrentCell: ->
+  loadZoomedImage: ->
     return if @currentCell.isZoomed or @currentCell.info.zoom is @currentCell.info.thumb
 
     clearTimeout(@zoomTimer) if @zoomTimer
+
+    # zoomIframe = $('<iframe>')
+    # 
+    # @zoomTimer = setTimeout =>
+    #   console.log 'in timeout'
+    #   zoomIframe.on 'load', =>
+    #     console.log 'loaded!'
+    #     # this.sizeAndPositionImageInCell(zoomIframe, @currentCell.div)
+    #     # $(@currentCell.div.find('img')[0]).replaceWith(zoomIframe)
+    #     $(@currentCell.div).append zoomIframe
+    #     @currentCell.isZoomed = true
+    # 
+    #   zoomIframe.on 'error', =>
+    #     console.log 'error!'
+    # 
+    #   zoomIframe.attr 'src', @currentCell.info.link
+    #   zoomIframe.load()
+    #   @zoomTimer = null
+    # , 2000
 
     zoomImage = $('<img class="zoom" />')
 
     @zoomTimer = setTimeout =>
       zoomImage.load =>
-        this.sizeAndPositionImageInCell(zoomImage[0], @currentCell.div[0])
+        this.sizeAndPositionImageInCell(zoomImage, @currentCell.div)
         $(@currentCell.div.find('img')[0]).replaceWith(zoomImage)
         @currentCell.isZoomed = true
 
@@ -164,7 +202,7 @@ class ScoutSublimeVideo.Carousel
   setupKeybordObservers: ->
     # Limited keyboard support for now
     $(window).on 'keydown', (e) =>
-      if ScoutSublimeVideo.Helpers.Keyboard.space(e)
+      if ScoutSublimeVideo.Helpers.Keyboard.isSpace(e)
         this.toggleMagnifyMode()
       else
         @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = true
@@ -175,10 +213,11 @@ class ScoutSublimeVideo.Carousel
       @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = false
       this.keyCheck()
 
-    $(@camera).on 'click', (e) =>
+    @camera.on 'click', (e) =>
+      this.updateStack($(e.target).parents('.cell').data('stack-index'))
       this.toggleMagnifyMode()
 
-    @camera.addEventListener 'touchstart', (e) =>
+    @camera[0].addEventListener 'touchstart', (e) =>
       e.preventDefault()
       @touchZoom = e.touches[1] isnt undefined
       @startX = e.touches[0].pageX
@@ -186,7 +225,7 @@ class ScoutSublimeVideo.Carousel
       false
     , false
 
-    @camera.addEventListener 'touchmove', (e) =>
+    @camera[0].addEventListener 'touchmove', (e) =>
       e.preventDefault()
       return unless @touchEnabled
 
@@ -202,7 +241,7 @@ class ScoutSublimeVideo.Carousel
       false
     , true
 
-    @camera.addEventListener 'touchend', (e) =>
+    @camera[0].addEventListener 'touchend', (e) =>
       e.preventDefault()
       this.stopTouch()
       false

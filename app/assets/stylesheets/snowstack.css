@@ -17,7 +17,7 @@
 }
 
 .page {
-  -webkit-perspective: 600;
+  -webkit-perspective: 600px;
   width: 100%;
   height: 100%;
   margin: 0 auto;
@@ -30,7 +30,7 @@
 }
 
 div.origin {
-  left: 50%;
+  left: 51%;
   top: 50%;
 }
 
@@ -92,7 +92,7 @@ div.original.selected.magnify .mover {
 }
 
 div.original.selected.magnify img {
-  -webkit-transform: scale(2.0);
+  -webkit-transform: scale(1.9);
 }
 
 a.external_link {

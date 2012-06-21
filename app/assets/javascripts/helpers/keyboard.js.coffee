@@ -1,18 +1,24 @@
 ScoutSublimeVideo.Helpers.Keyboard =
-  up: (e) ->
-    ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode] is 'up'
+  space: 32
+  left: 37
+  up: 38
+  right: 39
+  down: 40
 
-  down: (e) ->
-    ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode] is 'down'
+  isUp: (e) ->
+    e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.up
 
-  left: (e) ->
-    ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode] is 'left'
+  isDown: (e) ->
+    e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.down
 
-  right: (e) ->
-    ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode] is 'right'
+  isLeft: (e) ->
+    e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.left
 
-  space: (e) ->
-    ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode] is 'space'
+  isRight: (e) ->
+    e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.right
+
+  isSpace: (e) ->
+    e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.space
 
 ScoutSublimeVideo.Helpers.Keyboard.keysMap =
   32: 'space'
