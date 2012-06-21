@@ -28,7 +28,7 @@ class ScreenshotsWorker
   #  screenshots.
   # @see #take_initial_screenshots
   def take_activity_screenshots(opts = { plays_threshold: 10, days_interval: 5 })
-    tokens_to_activity_screenshot do |token|
+    tokens_to_activity_screenshot(opts) do |token|
       ScreenshotWorker.perform_async(token)
     end
   end

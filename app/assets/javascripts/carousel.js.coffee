@@ -8,15 +8,15 @@ class ScoutSublimeVideo.Carousel
       rows: 1, rowHeight: window.innerHeight / 3,
       cellRatio: 300 / 180, cellGap: 10,
       perspective: false, reflection: false,
-      initialRepeatDelay: 330, repeatInterval: 600
+      initialRepeatDelay: 330, repeatInterval: 60
 
     @cellHeight = Math.round(@options['rowHeight'])
     @cellWidth  = Math.round(@cellHeight * @options['cellRatio'])
     @cxspacing  = @cellWidth + @options['cellGap']
     @cyspacing  = @cellHeight + @options['cellGap']
 
-    @dolly      = $('#dolly')[0]
-    @camera     = $('#camera')[0]
+    @dolly  = $('#dolly')[0]
+    @camera = $('#camera')[0]
 
     @cells            = []
     @currentCellIndex = -1
@@ -26,14 +26,9 @@ class ScoutSublimeVideo.Carousel
     @keys     = { left: false, right: false, up: false, down: false }
     @keyTimer = null
 
-    this.setupReflectionEffect()
     _.each images, (image) => this.addImage image
     this.setupKeybordObservers()
     this.updateStack(1)
-
-  setupReflectionEffect: ->
-    if @options['reflection']
-      $('#mirror')[0].style.webkitTransform = "scaleY(-1.0) #{this.translate3d(0, -@cyspacing * 6 - 1, 0)}"
 
   addImage: (info) ->
     cell  = {}
@@ -52,7 +47,10 @@ class ScoutSublimeVideo.Carousel
 
     $(img).load =>
       this.sizeAndPositionImageInCell(img, cell.div[0])
-      cell.div.append $("<a class='mover viewflat' href='#{cell.info.link}' target='_blank'></a>").append(img)
+      cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img)
+      # cell.div.append(img)
+      cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{cell.info.hostname}</a>")
+      cell.div.append $("<ul class='info'><li>Views: #{cell.info.views}</li><li>Video tags: #{cell.info.video_tags}</li></ul>")
       cell.div.css 'opacity', 1
 
     img.src = info.thumb
@@ -62,19 +60,8 @@ class ScoutSublimeVideo.Carousel
     this.addReflectionToCell(cell) if y is @options['rows'] - 1
 
   addReflectionToCell: (cell) ->
-    if @options['mirror']
-      cell.reflection = $('<div class="cell fader view reflection" style="opacity: 0"></div>').width(@cellWidth).height(@cellHeight)
-      cell.reflection[0].style.webkitTransform = this.translate3d(x * @cxspacing, y * @cyspacing, 0)
-      reflectionImg = document.createElement('img')
-
-      $(reflectionImg).load =>
-        this.sizeAndPositionImageInCell(reflectionImg, cell.reflection[0])
-        cell.reflection.append $('<div class="mover viewflat"></div>').append(reflectionImg)
-        cell.reflection.css 'opacity', 1
-
-      reflectionImg.src = cell.info.thumb
-
-      $('#rstack').append(cell.reflection)
+    if @options['reflection']
+      $(cell.div).addClass 'reflection'
 
   updateStack: (newIndex) ->
     this.updateCurrentCell(newIndex)
@@ -125,11 +112,11 @@ class ScoutSublimeVideo.Carousel
   unselectCurrentCell: ->
     if @currentCellIndex isnt -1
       @currentCell.div.removeClass 'selected magnify'
-      @currentCell.reflection.removeClass 'selected' if @currentCell.reflection
+      # @currentCell.reflection.removeClass 'selected' if @currentCell.reflection
 
   selectCurrentCell: ->
     @currentCell.div.addClass 'selected'
-    @currentCell.reflection.addClass('selected') if @currentCell.reflection
+    # @currentCell.reflection.addClass('selected') if @currentCell.reflection
 
   setCurrentCell: (newCellIndex) ->
     @currentCellIndex = Math.min(Math.max(newCellIndex, 0), @cells.length - 1)
@@ -178,7 +165,6 @@ class ScoutSublimeVideo.Carousel
     # Limited keyboard support for now
     $(window).on 'keydown', (e) =>
       if ScoutSublimeVideo.Helpers.Keyboard.space(e)
-        # Magnify toggle with spacebar
         this.toggleMagnifyMode()
       else
         @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = true
@@ -188,6 +174,9 @@ class ScoutSublimeVideo.Carousel
     $(window).on 'keyup', (e) =>
       @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = false
       this.keyCheck()
+
+    $(@camera).on 'click', (e) =>
+      this.toggleMagnifyMode()
 
     @camera.addEventListener 'touchstart', (e) =>
       e.preventDefault()

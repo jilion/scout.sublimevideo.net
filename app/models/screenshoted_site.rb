@@ -30,4 +30,8 @@ class ScreenshotedSite
   def self.from(sites)
     where(:t.in => sites.pluck(:token))
   end
+
+  def site
+    @site ||= Site.find_by_token(t)
+  end
 end
