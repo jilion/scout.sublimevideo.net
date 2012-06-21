@@ -1,4 +1,4 @@
-h1= "New Sites on #{l(@day, format: :d_b_Y)}"
+h2.title= "New Sites on #{l(@day, format: :d_b_Y)}"
 
 .hidden_form
   = form_tag "/new_sites/#{l(@day - 1.day, format: :Y_m_d)}", method: 'get', id: 'backward' do

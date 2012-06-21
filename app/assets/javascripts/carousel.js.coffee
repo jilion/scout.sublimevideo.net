@@ -50,7 +50,7 @@ class ScoutSublimeVideo.Carousel
       cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img)
       # cell.div.append(img)
       cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{cell.info.hostname}</a>")
-      cell.div.append $("<ul class='info'><li>Views: #{cell.info.views}</li><li>Video tags: #{cell.info.video_tags}</li></ul>")
+      cell.div.append $("<ul class='info'><li><span class='i_f'>v</span> <em>Views: #{cell.info.views}</em></li><li><span class='i_f'>m</span> <em>Video tags: #{cell.info.video_tags}</em></li></ul>")
       cell.div.css 'opacity', 1
 
     img.src = info.thumb

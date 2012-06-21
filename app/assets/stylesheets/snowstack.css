@@ -1,11 +1,3 @@
-body {
-  overflow: hidden;
-  background-color: black;
-  color: white;
-  margin: 0;
-  padding: 0;
-}
-
 .view {
   position: absolute;
   display: block;
@@ -30,6 +22,11 @@ body {
   height: 100%;
   margin: 0 auto;
   text-align: center;
+}
+
+.page.view {
+  top:0;
+  left:0;
 }
 
 div.origin {
@@ -100,10 +97,43 @@ div.original.selected.magnify img {
 
 a.external_link {
   position:absolute;
-  bottom:-20px;
+  bottom:20px;
+  left:30px;
+  z-index:3;
+  font-size:30px;
+  font-weight:bold;
+  font-style:italic;
+  display:block;
+  background:rgba(0,0,0,0.8);
+  border-radius:200px;
+  padding:10px 25px 15px;
+  line-height:30px;
 }
 
 ul.info {
+  list-style-type:none;
   position:absolute;
   bottom:-80px;
+  text-align:left;
+}
+
+ul.info li {
+  display:block;
+  padding:2px 0;
+}
+
+ul.info li span.i_f {
+  font-family:"Pictos Custom";
+  display:inline-block;
+  width:22px;
+  font-size:20px;
+  position:relative;
+  top:2px;
+}
+
+ul.info li em {
+  font-style:normal;
+  font-weight:bold;
+  opacity:0.5;
+  display:inline-block;
 }

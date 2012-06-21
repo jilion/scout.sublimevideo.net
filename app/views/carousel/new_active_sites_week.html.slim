@@ -1,4 +1,4 @@
-h1= "New Active Sites of Week #{l(@day, format: :d_b_Y)}"
+h2.title= "New Active Sites of Week #{l(@day, format: :d_b_Y)}"
 
 = form_tag "/new_active_sites/#{l(@day - 1.week, format: :Y_m_d)}", method: 'get', id: 'backward' do
   = submit_tag '-'
