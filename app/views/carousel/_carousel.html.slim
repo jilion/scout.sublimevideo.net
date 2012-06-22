@@ -21,14 +21,26 @@
     li 
       strong v 
       em change view
-    li 
+    li
       strong t 
       em view today
 
-- images = []
+#info_bar style="display:none"
+  = link_to "i", "", class: "admin_link", onclick: "window.open(this);return false"
+  = link_to "test.com", "", class: "site_link", onclick: "window.open(this);return false"
+  .usage_info
+    ul
+      li.views
+        span.i_f v
+        em Views: 1,000
+      li.video_tags
+        span.i_f m 
+        em Video tags: 1,000
+
+-images = []
 - @screenshoted_sites.entries.each do |screenshoted_site|
   - if screnshot = screenshoted_site.screenshots.latest
-    - images << { thumb: screnshot.f.url(:carousel), zoom: screnshot.f.url(:carousel), hostname: screenshoted_site.site.hostname, link: screnshot.u, views: number_with_delimiter(screenshoted_site.site.last_30_days_billable_video_views), video_tags: number_with_delimiter(screenshoted_site.site.last_30_days_video_tags) }
+    - images << { thumb: screnshot.f.url(:carousel), zoom: screnshot.f.url(:carousel), hostname: screenshoted_site.site.hostname, link: screnshot.u, views: number_with_delimiter(screenshoted_site.site.last_30_days_billable_video_views), video_tags: number_with_delimiter(screenshoted_site.site.last_30_days_video_tags), token: screenshoted_site.site.token }
 
 javascript:
   $(document).ready(function() {

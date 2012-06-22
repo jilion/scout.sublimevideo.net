@@ -25,6 +25,8 @@ class ScoutSublimeVideo.Carousel
 
     @keys     = { left: false, right: false, up: false, down: false }
     @keyTimer = null
+    
+    @infoBar = $('#info_bar')
 
     _.each images, (image) => this.addImage image
     this.setupKeybordObservers()
@@ -116,6 +118,7 @@ class ScoutSublimeVideo.Carousel
 
   selectCurrentCell: ->
     @currentCell.div.addClass 'selected'
+    this.toggleInfoBar()
     # @currentCell.reflection.addClass('selected') if @currentCell.reflection
 
   setCurrentCell: (newCellIndex) ->
@@ -234,7 +237,18 @@ class ScoutSublimeVideo.Carousel
     else
       clearTimeout(@keyTimer)
       @keyTimer = null
-
+  
+  toggleInfoBar: ->
+    if @magnifyMode
+      @infoBar.show()
+    else
+      @infoBar.hide()
+    
+    @infoBar.find('a.site_link').html(@currentCell.info.hostname).attr('href',@currentCell.info.link)
+    @infoBar.find('a.admin_link').attr('href','https://admin.sublimevideo.net/sites/' + @currentCell.info.token + '/edit')
+    @infoBar.find('li.views em').html('Views: ' + @currentCell.info.views)
+    @infoBar.find('li.video_tags em').html('Video tags: ' + @currentCell.info.video_tags)
+    
   # snowstack_init();
   #     flickr(function (images)
   #     {
