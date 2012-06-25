@@ -82,6 +82,11 @@ h2.title {
   opacity:0.3;
 }
 
+h2.title.small {
+  font-size:28px;
+  padding:10px 0;
+}
+
 #caption {
   opacity:0;
   position:fixed;

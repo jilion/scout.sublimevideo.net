@@ -27,6 +27,7 @@ class ScoutSublimeVideo.Carousel
     @keyTimer = null
     
     @infoBar = $('#info_bar')
+    @title = $('h2.title')
 
     _.each images, (image) => this.addImage image
     this.setupKeybordObservers()
@@ -241,8 +242,10 @@ class ScoutSublimeVideo.Carousel
   toggleInfoBar: ->
     if @magnifyMode
       @infoBar.show()
+      @title.addClass('small')
     else
       @infoBar.hide()
+      @title.removeClass('small')
     
     @infoBar.find('a.site_link').html(@currentCell.info.hostname).attr('href',@currentCell.info.link)
     @infoBar.find('a.admin_link').attr('href','https://admin.sublimevideo.net/sites/' + @currentCell.info.token + '/edit')
