@@ -88,11 +88,11 @@ div.original.selected .mover {
 }
 
 div.original.selected.magnify .mover {
-  -webkit-transform: translate3d(0, 0, 100px);
+  -webkit-transform: translate3d(0, 0, 310px);
 }
 
 div.original.selected.magnify img {
-  -webkit-transform: scale(1.9);
+/*  -webkit-transform: scale(1.9);*/
 }
 
 #info_bar {

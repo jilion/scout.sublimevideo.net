@@ -16,15 +16,16 @@ gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/pro
 gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
 gem 'mini_magick',         '~> 3.4.0'
 gem 'sidekiq',             '~> 2.0.2'
-# gem 'phantomjs.rb',        '>= 0.0.4'
 
-# Auth / invitations
-gem 'devise', '~> 2.1.2'
-
+# Views
 gem 'slim'
-# gem 'activeadmin',         '~> 0.4.4'
+gem 'kaminari',            '~> 0.13.0'
 gem 'jquery-rails'
 gem 'acts-as-taggable-on', '~> 2.2.2'
+
+# Auth / Admin
+gem 'devise', '~> 2.1.2'
+# gem 'activeadmin',         '~> 0.4.4'
 
 # Gems used only for assets and not required
 # in production environments by default.

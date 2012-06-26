@@ -14,6 +14,35 @@ class ScreenshotedSite
 
   validates :t, presence: true, uniqueness: true
 
+  class << self
+    # Returns the screenshoted sites corresponding to the given Site array
+    #
+    # @param [Array<Site>] sites array of Site instances
+    def from(sites)
+      @@tokens      = sites.pluck(:token)
+      @@sites_infos = nil
+
+      where(:t.in => @@tokens)
+    end
+
+    # Returns the screenshoted sites corresponding to the given Site array
+    # sorted by last_30_days_billable_video_views DESC
+    #
+    # @param [Array<Site>] sites array of Site instances
+    def from_and_sorted(sites)
+      from(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
+    end
+
+    def sites_info(token)
+      @@sites_infos ||= Site.where(token: @@tokens).inject({}) { |hash, s| hash[s.token] = s; hash }
+      @@sites_infos[token]
+    end
+  end
+
+  def site_info
+    @site_info ||= self.class.sites_info(t)
+  end
+
   # This method tells if the latest screenshot of a site is older than the
   # given days count.
   #
@@ -24,14 +53,17 @@ class ScreenshotedSite
     screenshots.latest.created_at < days_count.days.ago
   end
 
-  # Returns the screenshoted sites corresponding to the given Site array
-  #
-  # @param [Array<Site>] sites array of Site instances
-  def self.from(sites)
-    where(:t.in => sites.pluck(:token))
-  end
-
-  def site
-    @site ||= Site.find_by_token(t)
+  def prepare_for_carousel
+    if screenshot = screenshots.latest
+      {
+        token: t,
+        thumb: screenshot.f.url(:carousel),
+        zoom: screenshot.f.url(:carousel),
+        link: screenshot.u,
+        hostname: site_info.hostname,
+        views: site_info.last_30_days_billable_video_views,
+        video_tags: site_info.last_30_days_video_tags
+      }
+    end
   end
 end

@@ -4,6 +4,10 @@ ScoutSublimeVideo.Helpers.Keyboard =
   up: 38
   right: 39
   down: 40
+  v: 86
+  t: 84
+  g: 71
+  a: 65
 
   isUp: (e) ->
     e.keyCode is ScoutSublimeVideo.Helpers.Keyboard.up

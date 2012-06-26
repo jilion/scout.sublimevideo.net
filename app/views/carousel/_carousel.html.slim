@@ -1,4 +1,4 @@
-.page.view
+#carousel.page.view
   .origin.view
     #camera.view
       #dolly.view
@@ -6,44 +6,61 @@
         #mirror.view
           #rstack.view
 
-#caption.caption 
+#caption.caption
   h4 Keyboard shortcuts
   ul
-    li 
-      strong ↑↓ 
+    li
+      strong ↑↓
       em change day/week
     li
-      strong ←→ 
+      strong ←→
       em scroll sites
-    li 
-      strong space 
+    li
+      strong space
       em toggles magnify
-    li 
-      strong v 
+    li
+      strong v
       em change view
     li
-      strong t 
+      strong t
       em view today
+    li
+      strong g
+      em open real site
+    li
+      strong a
+      em open in admin
 
 #info_bar style="display:none"
-  = link_to "i", "", class: "admin_link", onclick: "window.open(this);return false"
-  = link_to "test.com", "", class: "site_link", onclick: "window.open(this);return false"
+  = link_to 'i', '', class: 'admin_link', onclick: 'window.open(this);return false'
+  = link_to 'example.com', '', class: 'site_link', target: '_blank', onclick: 'window.open(this);return false'
   .usage_info
     ul
       li.views
         span.i_f v
         em Views: 1,000
       li.video_tags
-        span.i_f m 
+        span.i_f m
         em Video tags: 1,000
-
--images = []
-- @screenshoted_sites.entries.each do |screenshoted_site|
-  - if screnshot = screenshoted_site.screenshots.latest
-    - images << { thumb: screnshot.f.url(:carousel), zoom: screnshot.f.url(:carousel), hostname: screenshoted_site.site.hostname, link: screnshot.u, views: number_with_delimiter(screenshoted_site.site.last_30_days_billable_video_views), video_tags: number_with_delimiter(screenshoted_site.site.last_30_days_video_tags), token: screenshoted_site.site.token }
 
 javascript:
   $(document).ready(function() {
-    carousel = new ScoutSublimeVideo.Carousel(#{raw images.to_json}, { rows: 1, reflection: false, cellRatio: 1100/825, cellGap: 30 });
+    ScoutSublimeVideo.carousel = new ScoutSublimeVideo.Carousel({ images: #{raw @images}, cellRatio: 1100/825, cellGap: 30 });
+
+    page = 2
+    while (page <= #{@sites.respond_to?(:num_pages) ? @sites.num_pages : 1}) {
+      var url;
+      if (document.location.search.length > 0) url = document.location.href.replace(document.location.search, '');
+      else url = document.location.href;
+      url += "?page=" + page;
+
+      $.ajax({
+        type: 'get',
+        async: true,
+        url: url,
+        dataType: 'script'
+      })
+      page++;
+    }
   });
   
