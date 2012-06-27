@@ -17,19 +17,22 @@
       em scroll sites
     li
       strong space
-      em toggles magnify
+      em toggle magnify
     li
       strong v
       em change view
     li
       strong t
-      em view today
+      em view today/this week
     li
-      strong g
-      em open real site
+      strong o
+      em open site
     li
       strong a
-      em open in admin
+      em open admin
+    li
+      strong s
+      em#slideshow_label start/stop slideshow
 
 #info_bar style="display:none"
   = link_to 'i', '', class: 'admin_link', onclick: 'window.open(this);return false'
@@ -45,7 +48,7 @@
 
 javascript:
   $(document).ready(function() {
-    ScoutSublimeVideo.carousel = new ScoutSublimeVideo.Carousel({ images: #{raw @images}, cellRatio: 1100/825, cellGap: 30 });
+    ScoutSublimeVideo.carousel = new ScoutSublimeVideo.Carousel({ images: #{raw @images} });
 
     page = 2
     while (page <= #{@sites.respond_to?(:num_pages) ? @sites.num_pages : 1}) {

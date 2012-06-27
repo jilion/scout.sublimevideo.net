@@ -2,9 +2,10 @@ class ScoutSublimeVideo.Carousel
   constructor: (@options) ->
     _.defaults @options,
       rows: 1, rowHeight: window.innerHeight / 3,
-      cellRatio: 300 / 180, cellGap: 10,
+      cellRatio: 1100 / 825, cellGap: 30,
       perspective: false, reflection: false,
-      initialRepeatDelay: 330, repeatInterval: 60
+      initialKeyRepeatDelay: 330, keyRepeatInterval: 60,
+      slideshow: true, autoNextInterval: 5000, loop: true
 
     @cellHeight = Math.round(@options['rowHeight'])
     @cellWidth  = Math.round(@cellHeight * @options['cellRatio'])
@@ -22,12 +23,20 @@ class ScoutSublimeVideo.Carousel
     @magnifyMode      = false
     @touchEnabled     = true
 
-    @keys     = { left: false, right: false, up: false, down: false }
+    @keys = {}
+    @keys[ScoutSublimeVideo.Helpers.Keyboard.left] = false
+    @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = false
+    @keys[ScoutSublimeVideo.Helpers.Keyboard.up] = false
+    @keys[ScoutSublimeVideo.Helpers.Keyboard.down] = false
     @keyTimer = null
-    console.log @options['images']
+
+    @slideshowTimer = null
+
     if @options['images'] and @options['images'].length > 0
       this.addImages(@options['images'])
-      this.updateStack(1)
+      this.goTo(1)
+      this.toggleMagnifyMode()
+      this.startSlideshow(@options['autoNextInterval'] * 2) if @options['slideshow'] and @options['images'].length >= 2
     else
       console.log 'No images at initialization'
 
@@ -73,7 +82,7 @@ class ScoutSublimeVideo.Carousel
     if @options['reflection']
       $(cell.div).addClass 'reflection'
 
-  updateStack: (newIndex) ->
+  goTo: (newIndex) ->
     this.updateCurrentCell(newIndex)
     this.moveDollyToCellIndex(@currentCellIndex)
     this.applyPerspective()
@@ -171,7 +180,7 @@ class ScoutSublimeVideo.Carousel
 
   toggleMagnifyMode: ->
     @magnifyMode = not @magnifyMode
-    this.updateStack(@currentCellIndex)
+    this.goTo(@currentCellIndex)
     this.toggleInfoBar()
 
   toggleInfoBar: ->
@@ -194,48 +203,58 @@ class ScoutSublimeVideo.Carousel
 
   setupKeyboardObservers: ->
     # Limited keyboard support for now
-    $(window).on 'keydown', (e) =>
-      if ScoutSublimeVideo.Helpers.Keyboard.isSpace(e)
-        this.toggleMagnifyMode()
-      else
-        @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = true
+    $(window).on 'keydown', (event) =>
+      switch event.which
+        when ScoutSublimeVideo.Helpers.Keyboard.space
+          this.toggleMagnifyMode()
+        when ScoutSublimeVideo.Helpers.Keyboard.o
+          ScoutSublimeVideo.carousel.openSiteLink()
+        when ScoutSublimeVideo.Helpers.Keyboard.a
+          ScoutSublimeVideo.carousel.openAdminLink()
+        when ScoutSublimeVideo.Helpers.Keyboard.s
+          if @slideshowTimer
+            this.stopSlideshow()
+          else
+            this.startSlideshow(0)
+        else
+          @keys[event.keyCode] = true
 
       this.keyCheck()
 
-    $(window).on 'keyup', (e) =>
-      @keys[ScoutSublimeVideo.Helpers.Keyboard.keysMap[e.keyCode]] = false
+    $(window).on 'keyup', (event) =>
+      @keys[event.keyCode] = false
       this.keyCheck()
 
-    @camera.on 'click', (e) =>
-      this.updateStack($(e.target).parents('.cell').data('stack-index'))
+    @camera.on 'click', (event) =>
+      this.goTo($(event.target).parents('.cell').data('stack-index'))
       this.toggleMagnifyMode()
 
-    @camera[0].addEventListener 'touchstart', (e) =>
-      e.preventDefault()
+    @camera[0].addEventListener 'touchstart', (event) =>
+      event.preventDefault()
       @touchZoom = e.touches[1] isnt undefined
-      @startX = e.touches[0].pageX
+      @startX = event.touches[0].pageX
       @lastX = @startX
       false
     , false
 
-    @camera[0].addEventListener 'touchmove', (e) =>
-      e.preventDefault()
+    @camera[0].addEventListener 'touchmove', (event) =>
+      event.preventDefault()
       return unless @touchEnabled
 
       if @touchZoom
-        this.touchPrevented(=> this.toggleMagnifyMode()) if e.scale >= 1.5 or e.scale <= 0.5
+        this.touchPrevented(=> this.toggleMagnifyMode()) if event.scale >= 1.5 or event.scale <= 0.5
       else
-        @lastX = e.touches[0].pageX
+        @lastX = event.touches[0].pageX
         dx     = @lastX - @startX
-        @keys.left  = (dx > 20)
-        @keys.right = (dx < 20)
+        @keys[ScoutSublimeVideo.Helpers.Keyboard.left]  = (dx > 20)
+        @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = (dx < 20)
         this.keyCheck()
         @startX = @lastX
       false
     , true
 
-    @camera[0].addEventListener 'touchend', (e) =>
-      e.preventDefault()
+    @camera[0].addEventListener 'touchend', (event) =>
+      event.preventDefault()
       this.stopTouch()
       false
     , true
@@ -246,50 +265,49 @@ class ScoutSublimeVideo.Carousel
     @touchEnabled = true
 
   stopTouch: ->
-    @keys.left = @keys.right = false
+    @keys[ScoutSublimeVideo.Helpers.Keyboard.left] = @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = false
     @startX = @lastX = 0
 
-  updateKeys: ->
-    newCellIndex = @currentCellIndex
-    newCellIndex -= @options['rows'] if @keys.left and newCellIndex >= @options['rows']
-    newCellIndex += @options['rows'] if @keys.right and (newCellIndex + @options['rows']) < @cells.length
-
-    this.updateStack(newCellIndex) unless newCellIndex is @currentCellIndex
+  keyCheck: ->
+    if @keys[ScoutSublimeVideo.Helpers.Keyboard.left] or @keys[ScoutSublimeVideo.Helpers.Keyboard.right] \
+    or @keys[ScoutSublimeVideo.Helpers.Keyboard.up] or @keys[ScoutSublimeVideo.Helpers.Keyboard.down]
+      this.repeatTimer(@options['initialKeyRepeatDelay']) if @keyTimer is null
+    else
+      this.killTimer('keyTimer')
 
   repeatTimer: (delay) ->
     this.updateKeys()
-    @keyTimer = setTimeout((=> this.repeatTimer(@options['repeatInterval'])), delay)
+    @keyTimer = setTimeout((=> this.repeatTimer(@options['keyRepeatInterval'])), delay)
 
-  keyCheck: ->
-    if @keys.left or @keys.right or @keys.up or @keys.down
-      this.repeatTimer(@options['initialRepeatDelay']) if @keyTimer is null
+  updateKeys: ->
+    newCellIndex  = @currentCellIndex
+    newCellIndex -= @options['rows'] if @keys[ScoutSublimeVideo.Helpers.Keyboard.left] and newCellIndex >= @options['rows']
+    newCellIndex += @options['rows'] if @keys[ScoutSublimeVideo.Helpers.Keyboard.right] and (newCellIndex + @options['rows']) < @cells.length
+
+    unless newCellIndex is @currentCellIndex
+      this.killTimer('slideshowTimer')
+      this.goTo(newCellIndex)
+
+  autoNext: ->
+    newCellIndex = @currentCellIndex
+    if (newCellIndex + @options['rows']) < @cells.length
+      newCellIndex += @options['rows']
     else
-      clearTimeout(@keyTimer)
-      @keyTimer = null
+      newCellIndex = 0 if @options['loop']
 
-  # snowstack_init();
-  #     flickr(function (images)
-  #     {
-  # $.each(images, snowstack_addimage);
-  # updateStack(1);
-  #       loading = false;
-  #     }, page);
+    unless newCellIndex is @currentCellIndex
+      this.goTo(newCellIndex)
+      this.startSlideshow(@options['autoNextInterval'])
 
-# function flickr(callback, page)
-# {
-#     var url = "http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=60746a125b4a901f2dbb6fc902d9a716&per_page=21&extras=url_o,url_m,url_s&page=" + page + "&format=json&jsoncallback=?";
-#
-#   $.getJSON(url, function(data)
-#   {
-#         var images = $.map(data.photos.photo, function (item)
-#         {
-#             return {
-#               thumb: item.url_s,
-#               zoom: 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '.jpg',
-#               link: 'http://www.flickr.com/photos/' + item.owner + '/' + item.id
-#             };
-#         });
-#
-#         callback(images);
-#     });
-# }
+  startSlideshow: (delay) ->
+    $('#slideshow_label').text('stop slideshow')
+    @slideshowTimer = setTimeout((=> this.autoNext()), delay)
+
+  stopSlideshow: ->
+    $('#slideshow_label').text('start slideshow')
+    this.killTimer('slideshowTimer')
+
+  killTimer: (timerName) ->
+    if this[timerName]
+      clearTimeout(this[timerName])
+      this[timerName] = null

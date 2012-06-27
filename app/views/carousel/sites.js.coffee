@@ -1,2 +1,2 @@
 ScoutSublimeVideo.carousel.addImages JSON.parse(<%= raw @images.to_json %>)
-ScoutSublimeVideo.carousel.updateStack(1) # if ScoutSublimeVideo.carousel.currentCellIndex is -1
+ScoutSublimeVideo.carousel.goTo(1) # if ScoutSublimeVideo.carousel.currentCellIndex is -1

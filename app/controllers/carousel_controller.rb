@@ -4,7 +4,7 @@ class CarouselController < ApplicationController
   before_filter :redirect_to_beginning_of_week, only: [:new_active_sites_week]
 
   def new_sites_day
-    @sites  = Site.created_on(@day.all_day)#.page params[:page]
+    @sites  = Site.created_on(@day.all_day)
     @images = ScreenshotedSite.from(@sites).map(&:prepare_for_carousel).compact.to_json
 
     respond_to do |format|
@@ -14,7 +14,7 @@ class CarouselController < ApplicationController
   end
 
   def new_active_sites_week
-    @sites  = Site.first_billable_plays_on(@day.all_week)#.page params[:page]
+    @sites  = Site.first_billable_plays_on(@day.all_week)
     @images = ScreenshotedSite.from_and_sorted(@sites).map(&:prepare_for_carousel).compact.to_json
 
     respond_to do |format|
