@@ -25,8 +25,8 @@ module CarrierWave
 end
 
 case Rails.env
-when 'production', 'staging'
+when 'production', 'staging', 'development'
   CarrierWave.fog_configuration
-when 'test', 'development'
+when 'test'
   CarrierWave.file_configuration
 end

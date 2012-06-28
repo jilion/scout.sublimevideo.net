@@ -1,5 +1,5 @@
 .yardoc
 config/env.yml
 doc
-public/uploads
+public/screenshots
 public/assets
