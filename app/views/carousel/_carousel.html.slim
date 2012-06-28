@@ -49,21 +49,5 @@
 javascript:
   $(document).ready(function() {
     ScoutSublimeVideo.carousel = new ScoutSublimeVideo.Carousel({ images: #{raw @images} });
-
-    page = 2
-    while (page <= #{@sites.respond_to?(:num_pages) ? @sites.num_pages : 1}) {
-      var url;
-      if (document.location.search.length > 0) url = document.location.href.replace(document.location.search, '');
-      else url = document.location.href;
-      url += "?page=" + page;
-
-      $.ajax({
-        type: 'get',
-        async: true,
-        url: url,
-        dataType: 'script'
-      })
-      page++;
-    }
   });
   

@@ -149,7 +149,7 @@ class ScoutSublimeVideo.Carousel
       this.loadZoomedImage()
 
   loadZoomedImage: ->
-    return if @currentCell.isZoomed or @currentCell.info.zoom is @currentCell.info.thumb
+    return if @currentCell.isZoomed or !@currentCell.info.zoom or @currentCell.info.zoom is @currentCell.info.thumb
 
     clearTimeout(@zoomTimer) if @zoomTimer
 
@@ -231,7 +231,7 @@ class ScoutSublimeVideo.Carousel
 
     @camera[0].addEventListener 'touchstart', (event) =>
       event.preventDefault()
-      @touchZoom = e.touches[1] isnt undefined
+      @touchZoom = event.touches[1] isnt undefined
       @startX = event.touches[0].pageX
       @lastX = @startX
       false
@@ -246,8 +246,9 @@ class ScoutSublimeVideo.Carousel
       else
         @lastX = event.touches[0].pageX
         dx     = @lastX - @startX
-        @keys[ScoutSublimeVideo.Helpers.Keyboard.left]  = (dx > 20)
-        @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = (dx < 20)
+        console.log dx
+        @keys[ScoutSublimeVideo.Helpers.Keyboard.left]  = dx > 0 and dx > 20
+        @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = dx < 0 and dx < -20
         this.keyCheck()
         @startX = @lastX
       false

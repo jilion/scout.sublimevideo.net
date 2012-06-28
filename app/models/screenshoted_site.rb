@@ -58,7 +58,6 @@ class ScreenshotedSite
       {
         token: t,
         thumb: screenshot.f.url(:carousel),
-        zoom: screenshot.f.url(:carousel),
         link: screenshot.u,
         hostname: site_info.hostname,
         views: site_info.last_30_days_billable_video_views,
