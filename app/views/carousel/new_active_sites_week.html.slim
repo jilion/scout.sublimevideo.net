@@ -1,11 +1,11 @@
 h2.title= "New Active Sites of Week #{l(@day, format: :d_b_Y)}"
 
 .hidden_form
-  = form_tag "/new_active_sites/#{l(@day - 1.week, format: :Y_m_d)}", method: 'get', id: 'backward' do
+  = form_tag new_active_sites_week_url(l(@day - 1.week, format: :Y_m_d)), method: 'get', id: 'backward' do
     = submit_tag '-'
 
 .hidden_form
-  = form_tag "/new_active_sites/#{l(@day + 1.week, format: :Y_m_d)}", method: 'get', id: 'forward' do
+  = form_tag new_active_sites_week_url(l(@day + 1.week, format: :Y_m_d)), method: 'get', id: 'forward' do
     = submit_tag '+'
 
 = render 'carousel'

@@ -22,10 +22,10 @@ $(document).ready ->
           when ScoutSublimeVideo.Helpers.Keyboard.down
             ScoutSublimeVideo.submitForm('#forward', event)
           when ScoutSublimeVideo.Helpers.Keyboard.v
-            if /new_sites/.test(document.location.pathname)
-              document.location = document.location.pathname.replace('new_sites', 'new_active_sites')
+            if /new/.test(document.location.pathname)
+              document.location = document.location.pathname.replace('new', 'active')
             else
-              document.location = document.location.pathname.replace('new_active_sites', 'new_sites')
+              document.location = document.location.pathname.replace('active', 'new')
           when ScoutSublimeVideo.Helpers.Keyboard.t
             now = new Date
             document.location = document.location.href.replace(/\d{4}\-\d{2}\-\d{2}/, "#{now.getFullYear()}-#{now.getMonth()}-#{now.getDate()}")
