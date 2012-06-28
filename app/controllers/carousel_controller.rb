@@ -5,12 +5,12 @@ class CarouselController < ApplicationController
 
   def new_sites_day
     @sites  = Site.created_on(@day.all_day)
-    @images = ScreenshotedSite.from_sites(@sites).map(&:prepare_for_carousel).compact.to_json
+    load_images_from_sites
   end
 
   def new_active_sites_week
     @sites  = Site.first_billable_plays_on(@day.all_week)
-    @images = ScreenshotedSite.from_sites_sorted_by_billable_views(@sites).map(&:prepare_for_carousel).compact.to_json
+    load_images_from_sites
   end
 
   private
@@ -21,6 +21,10 @@ class CarouselController < ApplicationController
 
   def redirect_to_beginning_of_week
     redirect_to new_active_sites_week_url(l(@day.beginning_of_week, format: :Y_m_d)) unless @day == @day.beginning_of_week
+  end
+
+  def load_images_from_sites
+    @images = ScreenshotedSite.from_sites_sorted_by_billable_views(@sites).map(&:prepare_for_carousel).compact.to_json
   end
 
 end
