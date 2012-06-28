@@ -33,7 +33,7 @@ class ScreenshotUploader < CarrierWave::Uploader::Base
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
     pretty_filename = model.u.gsub(%r{http://}, '').parameterize
-    "#{Time.now.utc.to_i}-#{pretty_filename}.#{file.extension}" if original_filename
+    "#{model.id}-#{pretty_filename}.#{file.extension}" if original_filename
   end
 
   def delete_empty_upstream_dirs
