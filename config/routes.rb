@@ -4,7 +4,10 @@ ScoutSublimevideo::Application.routes.draw do
 
   devise_for :admins, path: '', path_names: { sign_in: 'login', sign_out: 'logout' }
 
-  mount Sidekiq::Web => '/sidekiq'
+  admin_logged_in = lambda { |request| request.env["warden"].authenticate? }
+  constraints admin_logged_in do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   # Sample of named route:
   get 'new_sites/:day' => 'carousel#new_sites_day', as: 'new_sites_day'
