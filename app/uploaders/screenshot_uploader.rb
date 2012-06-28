@@ -15,10 +15,8 @@ class ScreenshotUploader < CarrierWave::Uploader::Base
     ENV['S3_SCREENSHOTS_BUCKET']
   end
 
-  def secure_url(*args)
-    url = file.authenticated_url(*args)
-    url.gsub!(/#{fog_directory}.s3.amazonaws.com/, "s3.amazonaws.com/#{fog_directory}")
-    url
+  def url(*args)
+    super.gsub(/#{fog_directory}.s3.amazonaws.com/, "s3.amazonaws.com/#{fog_directory}")
   end
 
   def fog_public
