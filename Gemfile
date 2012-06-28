@@ -42,6 +42,8 @@ end
 
 group :staging, :production do
   gem 'thin'
+  gem 'rpm_contrib'
+  gem 'newrelic_rpm'
 end
 
 group :development do

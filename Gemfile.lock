@@ -187,6 +187,7 @@ GEM
       net-ssh (>= 1.99.1)
     net-ssh (2.5.2)
     netrc (0.7.4)
+    newrelic_rpm (3.4.0.1)
     nokogiri (1.5.3)
     origin (1.0.0)
     orm_adapter (0.2.0)
@@ -241,6 +242,9 @@ GEM
       redis (~> 3.0.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    rpm_contrib (2.1.11)
+      newrelic_rpm (>= 3.1.1)
+      newrelic_rpm (>= 3.1.1)
     rspec (2.10.0)
       rspec-core (~> 2.10.0)
       rspec-expectations (~> 2.10.0)
@@ -353,11 +357,13 @@ DEPENDENCIES
   kaminari (~> 0.13.0)
   mini_magick (~> 3.4.0)
   mongoid (~> 3.0.0.rc)
+  newrelic_rpm
   pg (~> 0.13.2)
   pry-rails
   quiet_assets
   rack-livereload
   rails (= 3.2.6)
+  rpm_contrib
   rspec-core
   rspec-rails
   sass-rails (~> 3.2.5)
