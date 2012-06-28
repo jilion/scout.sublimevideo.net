@@ -156,10 +156,6 @@ GEM
       thor (~> 0.14)
     json (1.7.3)
     json_pure (1.7.3)
-    kaminari (0.13.0)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      railties (>= 3.0.0)
     launchy (2.1.0)
       addressable (~> 2.2.6)
     libwebsocket (0.1.3)
@@ -354,7 +350,6 @@ DEPENDENCIES
   guard-rspec
   heroku
   jquery-rails
-  kaminari (~> 0.13.0)
   mini_magick (~> 3.4.0)
   mongoid (~> 3.0.0.rc)
   newrelic_rpm

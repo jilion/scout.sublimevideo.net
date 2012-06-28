@@ -19,7 +19,6 @@ gem 'sidekiq',             '~> 2.0.2'
 
 # Views
 gem 'slim'
-gem 'kaminari',            '~> 0.13.0'
 gem 'jquery-rails'
 gem 'acts-as-taggable-on', '~> 2.2.2'
 

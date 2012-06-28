@@ -285,7 +285,7 @@ class ScoutSublimeVideo.Carousel
     newCellIndex += @options['rows'] if @keys[ScoutSublimeVideo.Helpers.Keyboard.right] and (newCellIndex + @options['rows']) < @cells.length
 
     unless newCellIndex is @currentCellIndex
-      this.killTimer('slideshowTimer')
+      this.stopSlideshow()
       this.goTo(newCellIndex)
 
   autoNext: ->

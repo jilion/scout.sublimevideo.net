@@ -2,8 +2,6 @@ class Site < ActiveRecord::Base
 
   acts_as_taggable
 
-  paginates_per 20
-
   scope :active,        where { state == 'active' }
   scope :with_hostname, where { (hostname != nil) & (hostname != '') }
   scope :with_min_billable_video_views, lambda { |min|

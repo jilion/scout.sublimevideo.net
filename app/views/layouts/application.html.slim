@@ -2,18 +2,14 @@ doctype html
 html
   head
     title SublimeVideo Scout
-    = stylesheet_link_tag    'application', media: 'all'
-    -# = stylesheet_link_tag    '//get.pictos.cc/fonts/2132/1', media: 'all'
-    = stylesheet_link_tag    'pictos', media: 'all'
+    = stylesheet_link_tag 'application', media: 'all'
     = yield :stylesheet
-    = javascript_include_tag 'application'
-    = javascript_include_tag '//use.typekit.com/frv0zff.js'
+    = javascript_include_tag 'application', '//use.typekit.com/frv0zff.js'
     javascript:
       try{Typekit.load();}catch(e){}
     = csrf_meta_tags
 
   body
-    
     = yield
 
     #footer

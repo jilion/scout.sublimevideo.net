@@ -18,7 +18,7 @@ class ScreenshotedSite
     # Returns the screenshoted sites corresponding to the given Site array
     #
     # @param [Array<Site>] sites array of Site instances
-    def from(sites)
+    def from_sites(sites)
       @@tokens      = sites.pluck(:token)
       @@sites_infos = nil
 
@@ -29,8 +29,8 @@ class ScreenshotedSite
     # sorted by last_30_days_billable_video_views DESC
     #
     # @param [Array<Site>] sites array of Site instances
-    def from_and_sorted(sites)
-      from(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
+    def from_sites_sorted_by_billable_views(sites)
+      from_sites(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
     end
 
     def sites_info(token)
