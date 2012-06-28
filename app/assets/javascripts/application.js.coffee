@@ -28,7 +28,7 @@ $(document).ready ->
               document.location = document.location.pathname.replace('active', 'new')
           when ScoutSublimeVideo.Helpers.Keyboard.t
             now = new Date
-            document.location = document.location.href.replace(/\d{4}\-\d{2}\-\d{2}/, "#{now.getFullYear()}-#{now.getMonth()}-#{now.getDate()}")
+            document.location = document.location.href.replace(/\d{4}\-\d{2}\-\d{2}/, "#{now.getFullYear()}-#{now.getMonth()+1}-#{now.getDate()}")
 
 window.ScoutSublimeVideo.submitForm = (formId, event) ->
   event.preventDefault()
