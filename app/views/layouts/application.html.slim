@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title SublimeVideo Scout
+    title= "SublimeVideo Scout - #{yield(:title)}"
     = stylesheet_link_tag 'application', media: 'all'
     = yield :stylesheet
     = javascript_include_tag 'application', '//use.typekit.com/frv0zff.js'

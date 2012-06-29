@@ -13,5 +13,5 @@ ScoutSublimevideo::Application.routes.draw do
   get 'new/:day' => 'carousel#new_sites_day', as: 'new_sites_day'
   get 'active/:day' => 'carousel#new_active_sites_week', as: 'new_active_sites_week'
 
-  root to: redirect("/new/#{I18n.l(Time.utc(2010, 9, 14), format: :Y_m_d)}")
+  root to: redirect("/new/#{I18n.l(Time.now.utc.midnight, format: :Y_m_d)}")
 end

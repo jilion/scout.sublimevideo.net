@@ -128,6 +128,7 @@ class ScoutSublimeVideo.Carousel
     this.unselectCurrentCell()
     this.setCurrentCell(newCellIndex)
     this.selectCurrentCell()
+    this.updatePageTitle()
     this.magnifyCurrentCell()
 
   unselectCurrentCell: ->
@@ -141,6 +142,13 @@ class ScoutSublimeVideo.Carousel
   selectCurrentCell: ->
     @currentCell.div.addClass 'selected'
     this.updateInfoBar()
+
+  updatePageTitle: ->
+    currentState = "#{@currentCellIndex + 1} / #{@cells.length}"
+    if /\d+ \/ \d+/.test(document.title)
+      document.title = document.title.replace /\d+ \/ \d+/, currentState
+    else
+      document.title = "#{document.title} - #{currentState}"
 
   magnifyCurrentCell: ->
     if @magnifyMode
