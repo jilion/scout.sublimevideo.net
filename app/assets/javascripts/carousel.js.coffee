@@ -67,7 +67,7 @@ class ScoutSublimeVideo.Carousel
       ul = $("<ul class='info'></ul>")
       ul.append $("<li><span class='i_f'>v</span> <em>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
       ul.append $("<li><span class='i_f'>m</span> <em>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
-      ul.append $("<li><span class='i_f'>t</span> <em>#{cell.info.tags}</em></li>")
+      ul.append $("<li><span class='i_f'>t</span> <em>#{cell.info.tags}</em></li>") unless cell.info.tags is ''
       cell.div.append ul
       cell.div.css 'opacity', 1
       this.addCellToStack(cell, row)
@@ -179,8 +179,8 @@ class ScoutSublimeVideo.Carousel
   cameraTransformForCellIndex: (cellIndex) ->
     x  = Math.floor(cellIndex / @options['rows'])
     y  = cellIndex - x * @options['rows']
-    cx = (x + 0.5) * @cxspacing
-    cy = (y + 0.5) * @cyspacing
+    cx = Math.floor((x + 0.5) * @cxspacing)
+    cy = Math.floor((y + 0.5) * @cyspacing)
 
     if @magnifyMode
       this.translate3d(-cx, -cy, 50)
@@ -203,7 +203,7 @@ class ScoutSublimeVideo.Carousel
     @infoBar.find('a.admin_link').attr 'href', "https://admin.sublimevideo.net/sites/#{@currentCell.info.token}/edit"
     @infoBar.find('li.views em').text "Views: #{@currentCell.info.views}"
     @infoBar.find('li.video_tags em').text "Video tags: #{@currentCell.info.video_tags}"
-    @infoBar.find('li.tags em').text @currentCell.info.tags
+    @infoBar.find('li.tags em').text @currentCell.info.tags unless @currentCell.info.tags is ''
 
   openSiteLink: ->
     window.open(@infoBar.find('a.site_link').attr('href'))
