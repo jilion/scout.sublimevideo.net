@@ -64,7 +64,11 @@ class ScoutSublimeVideo.Carousel
       this.sizeAndPositionImageInCell(img, cell.div)
       cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img[0])
       cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{cell.info.hostname}</a>")
-      cell.div.append $("<ul class='info'><li><span class='i_f'>v</span> <em>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li><li><span class='i_f'>m</span> <em>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li></ul>")
+      ul = $("<ul class='info'></ul>")
+      ul.append $("<li><span class='i_f'>v</span> <em>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
+      ul.append $("<li><span class='i_f'>m</span> <em>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
+      ul.append $("<li><span class='i_f'>t</span> <em>#{cell.info.tags}</em></li>")
+      cell.div.append ul
       cell.div.css 'opacity', 1
       this.addCellToStack(cell, row)
 
@@ -195,10 +199,11 @@ class ScoutSublimeVideo.Carousel
     @title.toggleClass 'small'
 
   updateInfoBar: ->
-    @infoBar.find('a.site_link').html(@currentCell.info.hostname).attr 'href', @currentCell.info.link
+    @infoBar.find('a.site_link').text(@currentCell.info.hostname).attr 'href', @currentCell.info.link
     @infoBar.find('a.admin_link').attr 'href', "https://admin.sublimevideo.net/sites/#{@currentCell.info.token}/edit"
-    @infoBar.find('li.views em').html "Views: #{@currentCell.info.views}"
-    @infoBar.find('li.video_tags em').html "Video tags: #{@currentCell.info.video_tags}"
+    @infoBar.find('li.views em').text "Views: #{@currentCell.info.views}"
+    @infoBar.find('li.video_tags em').text "Video tags: #{@currentCell.info.video_tags}"
+    @infoBar.find('li.tags em').text @currentCell.info.tags
 
   openSiteLink: ->
     window.open(@infoBar.find('a.site_link').attr('href'))

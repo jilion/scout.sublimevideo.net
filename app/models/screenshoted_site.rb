@@ -34,7 +34,7 @@ class ScreenshotedSite
     end
 
     def sites_info(token)
-      @@sites_infos ||= Site.where(token: @@tokens).inject({}) { |hash, s| hash[s.token] = s; hash }
+      @@sites_infos ||= Site.includes(:tags).where(token: @@tokens).inject({}) { |hash, s| hash[s.token] = s; hash }
       @@sites_infos[token]
     end
   end
@@ -61,7 +61,8 @@ class ScreenshotedSite
         link: screenshot.u,
         hostname: site_info.hostname,
         views: site_info.last_30_days_billable_video_views,
-        video_tags: site_info.last_30_days_video_tags
+        video_tags: site_info.last_30_days_video_tags,
+        tags: site_info.tag_list.join(', ')
       }
     end
   end
