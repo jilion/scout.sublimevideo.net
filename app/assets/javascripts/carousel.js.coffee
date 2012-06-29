@@ -34,8 +34,7 @@ class ScoutSublimeVideo.Carousel
 
     if @options['images'] and @options['images'].length > 0
       this.addImages(@options['images'])
-      this.goTo(1)
-      this.toggleMagnifyMode()
+      this.goTo(0)
       this.startSlideshow(@options['autoNextInterval'] * 2) if @options['slideshow'] and @options['images'].length >= 2
     else
       console.log 'No images at initialization'
