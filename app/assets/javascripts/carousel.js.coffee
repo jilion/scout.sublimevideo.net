@@ -65,9 +65,9 @@ class ScoutSublimeVideo.Carousel
       cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img[0])
       cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{cell.info.hostname}</a>")
       ul = $("<ul class='info'></ul>")
-      ul.append $("<li class='views'> <em>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
-      ul.append $("<li class='video_tags'> <em>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
-      ul.append $("<li class='tags'> <em>#{cell.info.tags}</em></li>") unless cell.info.tags is ''
+      ul.append $("<li class='views'><em data-icon='v'>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
+      ul.append $("<li class='video_tags'><em data-icon='m'>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
+      ul.append $("<li class='tags'><em data-icon='t'>#{cell.info.tags}</em></li>") unless cell.info.tags is ''
       cell.div.append ul
       cell.div.css 'opacity', 1
       this.addCellToStack(cell, row)
@@ -201,12 +201,12 @@ class ScoutSublimeVideo.Carousel
   updateInfoBar: ->
     @infoBar.find('a.site_link').text(@currentCell.info.hostname).attr 'href', @currentCell.info.link
     @infoBar.find('a.admin_link').attr 'href', "https://admin.sublimevideo.net/sites/#{@currentCell.info.token}/edit"
-    @infoBar.find('li.views').text "<em>Views: #{@currentCell.info.views}</em>"
-    @infoBar.find('li.video_tags').text "<em>Video tags: #{@currentCell.info.video_tags}</em>"
+    @infoBar.find('li.views').html "<em data-icon='v'>Views: #{@currentCell.info.views}</em>"
+    @infoBar.find('li.video_tags').html "<em data-icon='m'>Video tags: #{@currentCell.info.video_tags}</em>"
     if @currentCell.info.tags is ''
       @infoBar.find('li.tags').text ''
     else
-      @infoBar.find('li.tags').html "<em>#{@currentCell.info.tags}</em>"
+      @infoBar.find('li.tags').html "<em data-icon='t'>#{@currentCell.info.tags}</em>"
 
   openSiteLink: ->
     window.open(@infoBar.find('a.site_link').attr('href'))

@@ -180,18 +180,21 @@ ul.info li {
   padding:2px 0;
 }
 
-ul.info li span.i_f, .usage_info span.i_f {
+[data-icon]:before {
   font-family:"Pictos Custom";
   display:inline-block;
-  width:22px;
+  width:24px;
   font-size:20px;
   position:relative;
   top:2px;
+  color:#e0edff;
+  font-weight:normal;
+  content: attr(data-icon);
 }
 
 ul.info li em, .usage_info li em {
   font-style:normal;
   font-weight:bold;
-  opacity:0.5;
   display:inline-block;
+  color:#707780;
 }
