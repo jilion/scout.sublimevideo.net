@@ -16,6 +16,7 @@ gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/pro
 gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
 gem 'mini_magick',         '~> 3.4.0'
 gem 'sidekiq',             '~> 2.0.2'
+gem 'heroku'
 
 # Views
 gem 'slim'
@@ -79,7 +80,6 @@ end
 
 group :tools do
   gem 'wirble'
-  gem 'heroku'
   gem 'foreman'
   gem 'brakeman'
 
