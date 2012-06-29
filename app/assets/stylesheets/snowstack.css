@@ -104,6 +104,7 @@ div.original.selected.magnify img {
   left:0;
   z-index:3;
   text-align:center;
+  -webkit-transform:translate3d(0,0,2000px);
 }
 
 #info_bar a.admin_link {
