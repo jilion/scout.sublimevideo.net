@@ -35,7 +35,7 @@ describe ScreenshotsWorker do
       ScreenshotWorker.should_receive(:perform_async).with(site_token)
 
       worker.stub(:tokens_to_activity_screenshot) { |&block| block.call(site_token) }
-      worker.take_activity_screenshots(days_interval: 5)
+      worker.take_activity_screenshots
     end
   end
 
