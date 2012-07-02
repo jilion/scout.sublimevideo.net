@@ -12,9 +12,11 @@ class ScreenshotGrabber
 
     with_tempfile_image do |image|
       Screenshot.create!(site: screenshoted_site, u: referrer_for_screenshot, f: image)
+      screenshoted_site.update_attribute(:lfa, nil) unless screenshoted_site.lfa.nil?
       log :info, 'OK!'
     end
   rescue => ex
+    screenshoted_site.update_attribute(:lfa, Time.now.utc)
     log :error, "EX: #{ex.inspect}"
     true # don't retry the work...
   end

@@ -13,6 +13,18 @@ describe ScreenshotedSite, :focus do
     expect { described_class.create!(attributes) }.to raise_error
   end
 
+  describe '.failed_before' do
+    before do
+      @not_failed        = create(:screenshoted_site, lfa: nil)
+      @failed_3_days_ago = create(:screenshoted_site, lfa: 3.days.ago)
+      @failed_today      = create(:screenshoted_site, lfa: Time.now.utc)
+    end
+
+    it 'returns site with lfa == nil or lfa < given date' do
+      described_class.failed_before(2.days.ago).entries.should eq [@not_failed, @failed_3_days_ago]
+    end
+  end
+
   describe '#latest_screenshot_older_than' do
     let(:latest_screenshot) { create(:screenshot, created_at: 2.days.ago) }
     let(:attributes) do
@@ -20,7 +32,7 @@ describe ScreenshotedSite, :focus do
     end
     let(:screenshoted_site) { create(:screenshoted_site, attributes) }
 
-    it { screenshoted_site.latest_screenshot_older_than(1).should be_true }
-    it { screenshoted_site.latest_screenshot_older_than(5).should be_false }
+    it { screenshoted_site.latest_screenshot_older_than(1.day.ago).should be_true }
+    it { screenshoted_site.latest_screenshot_older_than(5.days.ago).should be_false }
   end
 end

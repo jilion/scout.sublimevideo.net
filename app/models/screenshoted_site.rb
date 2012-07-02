@@ -2,7 +2,8 @@ class ScreenshotedSite
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :t, type: String
+  field :t,   type: String
+  field :lfa, type: DateTime # last failed at => used for not retrying to take a screenshot everytime
 
   embeds_many :screenshots, cascade_callbacks: true, store_as: 's' do
     def latest
@@ -13,6 +14,8 @@ class ScreenshotedSite
   index({ t: 1 }, { unique: true })
 
   validates :t, presence: true, uniqueness: true
+
+  scope :failed_before, ->(date) { any_of([{ lfa: nil }, { :lfa.lte => date.to_i }]) }
 
   class << self
     # Returns the screenshoted sites corresponding to the given Site array
@@ -46,11 +49,11 @@ class ScreenshotedSite
   # This method tells if the latest screenshot of a site is older than the
   # given days count.
   #
-  # @param [Integer] days_count # of days to compare the latest screenshot to.
+  # @param [Datetime] date the date to compare the latest screenshot to.
   #
   # @return [Boolean]
-  def latest_screenshot_older_than(days_count)
-    screenshots.latest.created_at < days_count.days.ago
+  def latest_screenshot_older_than(date)
+    screenshots.latest.created_at < date
   end
 
   def prepare_for_carousel
