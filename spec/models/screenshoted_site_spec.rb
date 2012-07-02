@@ -13,7 +13,7 @@ describe ScreenshotedSite, :focus do
     expect { described_class.create!(attributes) }.to raise_error
   end
 
-  describe '.failed_before' do
+  describe '.not_failed_or_failed_after' do
     before do
       @not_failed        = create(:screenshoted_site, lfa: nil)
       @failed_3_days_ago = create(:screenshoted_site, lfa: 3.days.ago)
@@ -21,7 +21,7 @@ describe ScreenshotedSite, :focus do
     end
 
     it 'returns site with lfa == nil or lfa < given date' do
-      described_class.failed_before(2.days.ago).entries.should eq [@not_failed, @failed_3_days_ago]
+      described_class.not_failed_or_failed_after(2.days.ago).entries.should eq [@not_failed, @failed_today]
     end
   end
 

@@ -41,8 +41,9 @@ class ScreenshotsWorker
   #  iterate over the sites by batch. Useful for testing.
   # @see #take_initial_screenshots
   def tokens_to_initially_screenshot(group_iterator = :find_in_batches, opts = { days_interval: 10.days.ago })
+    tokens_to_not_screenshot = ScreenshotedSite.not_failed_or_failed_after(opts[:days_interval]).map(&:t)
     Site.active.with_hostname.send(group_iterator) do |sites_group|
-      (sites_group.map(&:token) - ScreenshotedSite.failed_before(opts[:days_interval]).map(&:t)).each { |token| yield token }
+      (sites_group.map(&:token) - tokens_to_not_screenshot).each { |token| yield token }
     end
   end
 

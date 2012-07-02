@@ -15,7 +15,7 @@ class ScreenshotedSite
 
   validates :t, presence: true, uniqueness: true
 
-  scope :failed_before, ->(date) { any_of([{ lfa: nil }, { :lfa.lte => date.to_i }]) }
+  scope :not_failed_or_failed_after, ->(date) { any_of([{ lfa: nil }, { :lfa.gte => date.to_i }]) }
 
   class << self
     # Returns the screenshoted sites corresponding to the given Site array
