@@ -1,7 +1,10 @@
 class CarouselController < ApplicationController
   respond_to :html
+
   before_filter :set_day
   before_filter :redirect_to_beginning_of_week, only: [:new_active_sites_week]
+
+  protect_from_forgery except: [:take]
 
   def new_sites_day
     @sites  = Site.created_on(@day.all_day)
@@ -11,6 +14,11 @@ class CarouselController < ApplicationController
   def new_active_sites_week
     @sites  = Site.first_billable_plays_on(@day.all_week)
     load_images_from_sites
+  end
+
+  def take
+    ScreenshotWorker.perform_async(params[:token])
+    render text: "Screenshot for #{params[:token]} will be re-taken!"
   end
 
   private

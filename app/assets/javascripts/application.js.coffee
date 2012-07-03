@@ -30,6 +30,12 @@ $(document).ready ->
             daysBack = if /active/.test document.location.href then 7 else 1
             pastDate = new Date(new Date() - (1000 * 3600 * 24 * daysBack)) # yesterday or last week
             document.location = document.location.href.replace /\d{4}\-\d{1,2}\-\d{1,2}/, "#{pastDate.getFullYear()}-#{pastDate.getMonth()+1}-#{pastDate.getDate()}"
+          when ScoutSublimeVideo.Helpers.Keyboard.f
+            $.ajax(
+              type: 'POST'
+              url: "/take/#{ScoutSublimeVideo.carousel.currentCell.info.token}"
+            ).done (msg) ->
+              alert(msg)
 
 window.ScoutSublimeVideo.submitForm = (formId, event) ->
   event.preventDefault()

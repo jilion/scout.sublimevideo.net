@@ -11,3 +11,4 @@ ScoutSublimeVideo.Helpers.Keyboard =
   r: 82
   o: 79
   s: 83
+  f: 70
