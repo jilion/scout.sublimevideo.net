@@ -27,10 +27,11 @@ $(document).ready ->
             else
               document.location = document.location.pathname.replace('active', 'new')
           when ScoutSublimeVideo.Helpers.Keyboard.t
-            now = new Date
-            document.location = document.location.href.replace(/\d{4}\-\d{2}\-\d{2}/, "#{now.getFullYear()}-#{now.getMonth()+1}-#{now.getDate()}")
+            daysBack = if /active/.test document.location.href then 7 else 1
+            pastDate = new Date(new Date() - (1000 * 3600 * 24 * daysBack)) # yesterday or last week
+            document.location = document.location.href.replace /\d{4}\-\d{1,2}\-\d{1,2}/, "#{pastDate.getFullYear()}-#{pastDate.getMonth()+1}-#{pastDate.getDate()}"
 
 window.ScoutSublimeVideo.submitForm = (formId, event) ->
   event.preventDefault()
   $(formId).submit()
-  
+
