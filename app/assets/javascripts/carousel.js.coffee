@@ -73,7 +73,7 @@ class ScoutSublimeVideo.Carousel
       this.addCellToStack(cell, row)
 
     img.on 'error', =>
-      img.attr 'src', '/no-screenshot.png'
+      img.attr 'src', '/no-load.png'
 
     img.attr 'src', info.thumb
 
