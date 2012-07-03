@@ -66,7 +66,7 @@ class ScoutSublimeVideo.Carousel
       cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{ScoutSublimeVideo.Helpers.Text.truncate_middle(cell.info.hostname, { length: 20 })}</a>")
       ul = $("<ul class='info'></ul>")
       ul.append $("<li class='views'><em data-icon='v'>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
-      ul.append $("<li class='video_tags'><em data-icon='m'>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
+      ul.append $("<li class='video_tags'><em data-icon='m'>Videos: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")
       ul.append $("<li class='tags'><em data-icon='t'>#{cell.info.tags}</em></li>") unless cell.info.tags is ''
       cell.div.append ul
       cell.div.css 'opacity', 1
@@ -202,7 +202,7 @@ class ScoutSublimeVideo.Carousel
     @infoBar.find('a.site_link').text(@currentCell.info.hostname).attr 'href', @currentCell.info.link
     @infoBar.find('a.admin_link').attr 'href', "https://admin.sublimevideo.net/sites/#{@currentCell.info.token}/edit"
     @infoBar.find('li.views').html "<em data-icon='v'>Views: #{@currentCell.info.views}</em>"
-    @infoBar.find('li.video_tags').html "<em data-icon='m'>Video tags: #{@currentCell.info.video_tags}</em>"
+    @infoBar.find('li.video_tags').html "<em data-icon='m'>Videos: #{@currentCell.info.video_tags}</em>"
     if @currentCell.info.tags is ''
       @infoBar.find('li.tags').text ''
     else
