@@ -1,0 +1,9 @@
+= title "Stats"
+
+h2= "Active sites with hostname: #{number_with_delimiter(@active_with_hostname_sites.size)}"
+
+h2= "Valid screenshoted sites: #{number_with_delimiter(@valid_screenshited_sites.size)}"
+
+h2= "Invalid screenshoted sites: #{number_with_delimiter(@invalid_screenshited_sites.size)}"
+
+h2= "Never screenshoted sites: #{number_with_delimiter(@active_with_hostname_sites.size - (@valid_screenshited_sites.size + @invalid_screenshited_sites.size))}"

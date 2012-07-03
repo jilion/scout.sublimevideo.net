@@ -12,15 +12,17 @@ class ScreenshotGrabber
 
     with_tempfile_image do |image|
       Screenshot.create!(site: screenshoted_site, u: referrer_for_screenshot, f: image)
+      screenshoted_site.update_attribute(:lfa, nil) unless screenshoted_site.lfa.nil?
       log :info, 'OK!'
     end
   rescue => ex
+    screenshoted_site.update_attribute(:lfa, Time.now.utc)
     log :error, "EX: #{ex.inspect}"
     true # don't retry the work...
   end
 
   def take_screenshot!(url, file)
-    cmd = "phantomjs #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
+    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
     log :info, cmd
     system cmd
   end
@@ -31,7 +33,8 @@ class ScreenshotGrabber
     tempfile = Tempfile.new(['screenshot', '.jpg'])
 
     begin
-      take_screenshot!(referrer_for_screenshot, tempfile)
+      success = take_screenshot!(referrer_for_screenshot, tempfile)
+      raise "Screenshot for #{referrer_for_screenshot} (#{@site_token}) was not successful!" unless success
       raise "#{tempfile.path} is empty!" unless File.size?(tempfile.path)
 
       yield(tempfile)
@@ -63,7 +66,7 @@ class ScreenshotGrabber
 
   def log(level, message)
     if level == 'error' || @options[:debug]
-      logger.send(level, lambda { "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token} | URL: #{referrer_for_screenshot}\n\t#{message}" })
+      logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token} | URL: #{referrer_for_screenshot}\n\t#{message}")
     end
   end
 

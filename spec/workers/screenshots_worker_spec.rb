@@ -46,13 +46,13 @@ describe ScreenshotsWorker do
     let(:screenshoted_sites) { [stub(t: 'abc')] }
     let(:active_sites)       { [[stub(token: site_token), stub(token: 'abc'), stub(token: '123')]] }
     before do
-      ScreenshotedSite.should_receive(:all)    { screenshoted_sites }
-      Site.stub_chain(:active, :with_hostname) { active_sites }
+      ScreenshotedSite.should_receive(:not_failed_or_failed_after) { screenshoted_sites }
+      Site.stub_chain(:active, :with_hostname)                     { active_sites }
     end
 
     it 'yields 2 tokens' do
       sum = 0
-      worker.send(:tokens_to_initially_screenshot, :each) do |token|
+      worker.send(:tokens_to_initially_screenshot, :each, { days_interval: 5 }) do |token|
         token.should_not eq 'abc'
         sum += 1
       end

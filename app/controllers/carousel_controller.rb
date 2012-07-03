@@ -16,7 +16,7 @@ class CarouselController < ApplicationController
   private
 
   def set_day
-    @day = (params[:day] ? Time.parse(params[:day]) : Time.utc(2010, 9, 15)).midnight
+    @day = (params[:day] ? Time.parse(params[:day]) : Time.now.utc).midnight
   end
 
   def redirect_to_beginning_of_week
