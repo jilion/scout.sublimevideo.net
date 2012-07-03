@@ -104,6 +104,7 @@ div.original.selected.magnify img {
   left:0;
   z-index:3;
   text-align:center;
+  -webkit-transform:translate3d(0,0,1000px);
 }
 
 #info_bar a.admin_link {
@@ -171,7 +172,8 @@ a.external_link {
 ul.info {
   list-style-type:none;
   position:absolute;
-  top:424px;
+  bottom:-150px;
+  height:90px;
   text-align:left;
 }
 
