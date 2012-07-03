@@ -1,5 +1,5 @@
 class ScoutSublimeVideo.Carousel
-  constructor: (@options) ->
+  constructor: (@options = {}) ->
     _.defaults @options,
       rows: 1, rowHeight: window.innerHeight / 3,
       cellRatio: 1100 / 825, cellGap: 30,
@@ -63,7 +63,7 @@ class ScoutSublimeVideo.Carousel
     img.on 'load', =>
       this.sizeAndPositionImageInCell(img, cell.div)
       cell.div.append $("<a class='mover viewflat' onclick='return false;'></a>").append(img[0])
-      cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{ScoutSublimeVideo.Helpers.Text.truncate_middle(cell.info.hostname)}</a>")
+      cell.div.append $("<a class='external_link' href='#{cell.info.link}'>#{ScoutSublimeVideo.Helpers.Text.truncate_middle(cell.info.hostname, { length: 20 })}</a>")
       ul = $("<ul class='info'></ul>")
       ul.append $("<li class='views'><em data-icon='v'>Views: #{$.formatNumber(cell.info.views, { format: "#,##0" })}</em></li>")
       ul.append $("<li class='video_tags'><em data-icon='m'>Video tags: #{$.formatNumber(cell.info.video_tags, { format: "#,##0" })}</em></li>")

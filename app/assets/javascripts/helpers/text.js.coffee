@@ -1,6 +1,9 @@
 ScoutSublimeVideo.Helpers.Text =
 
-  truncate_middle: (text, options = { length: 30, omission: "..." }) ->
+  truncate_middle: (text, options = {}) ->
+    _.defaults options,
+      length: 30, omission: "..."
+
     if text
       if text.length <= options['length']
         text
