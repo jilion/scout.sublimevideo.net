@@ -1,6 +1,7 @@
 class ScreenshotedSite
   include Mongoid::Document
   include Mongoid::Timestamps
+  include ApplicationHelper
 
   field :t,   type: String
   field :lfa, type: DateTime # last failed at => used for not retrying to take a screenshot everytime
@@ -57,16 +58,16 @@ class ScreenshotedSite
   end
 
   def prepare_for_carousel
-    if screenshot = screenshots.latest
-      {
-        token: t,
-        thumb: screenshot.f.url(:carousel),
-        link: screenshot.u,
-        hostname: site_info.hostname,
-        views: site_info.last_30_days_billable_video_views,
-        video_tags: site_info.last_30_days_video_tags,
-        tags: site_info.tag_list.join(', ')
-      }
-    end
+    screenshot = screenshots.latest
+
+    {
+      token: t,
+      thumb: screenshot ? screenshot.f.url(:carousel) : '/no-screenshot.png',
+      link: screenshot ? screenshot.u : url_with_protocol(site_info.hostname),
+      hostname: site_info.hostname,
+      views: site_info.last_30_days_billable_video_views,
+      video_tags: site_info.last_30_days_video_tags,
+      tags: site_info.tag_list.join(', ')
+    }
   end
 end
