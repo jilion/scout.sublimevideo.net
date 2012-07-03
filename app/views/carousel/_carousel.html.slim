@@ -23,7 +23,7 @@
       em change view
     li
       strong t
-      em view today/this week
+      em= "view #{action_name == 'new_sites_day' ? 'yesterday' : 'last week'}"
     li
       strong o
       em open site
@@ -50,4 +50,4 @@ javascript:
   $(document).ready(function() {
     ScoutSublimeVideo.carousel = new ScoutSublimeVideo.Carousel({ images: #{raw @images} });
   });
-  
+
