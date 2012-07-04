@@ -21,19 +21,14 @@ class ScreenshotGrabber
     true # don't retry the work...
   end
 
-  def take_screenshot!(url, file)
-    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
-    log :info, cmd
-    system cmd
-  end
-
   private
 
   def with_tempfile_image
     tempfile = Tempfile.new(['screenshot', '.jpg'])
 
     begin
-      success = take_screenshot!(referrer_for_screenshot, tempfile)
+      success = screenshot_referrer_or_hostname(tempfile)
+
       raise "Screenshot for #{referrer_for_screenshot} (#{@site_token}) was not successful!" unless success
       raise "#{tempfile.path} is empty!" unless File.size?(tempfile.path)
 
@@ -42,6 +37,19 @@ class ScreenshotGrabber
       tempfile.close
       tempfile.unlink
     end
+  end
+
+  def screenshot_referrer_or_hostname(tempfile)
+    success = take_screenshot!(referrer_for_screenshot, tempfile) if referrer_for_screenshot
+    success = take_screenshot!(hostname_for_screenshot, tempfile) unless success
+
+    success
+  end
+
+  def take_screenshot!(url, file)
+    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
+    log :info, cmd
+    system cmd
   end
 
   def site
@@ -53,11 +61,13 @@ class ScreenshotGrabber
   end
 
   def referrer_for_screenshot
-    @referrer_for_screenshot ||= if referrer = Referrer.where(token: @site_token).by_hits.first
-      referrer.url
-    else
-      "http://#{site.hostname}"
+    @referrer_for_screenshot ||= begin
+      referrer.url if referrer = Referrer.where(token: @site_token).by_hits.first
     end
+  end
+
+  def hostname_for_screenshot
+    "http://#{site.hostname}"
   end
 
   def logger
