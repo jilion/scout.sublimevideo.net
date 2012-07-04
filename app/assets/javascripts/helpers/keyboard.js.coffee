@@ -4,11 +4,11 @@ ScoutSublimeVideo.Helpers.Keyboard =
   up: 38
   right: 39
   down: 40
-  v: 86
-  t: 84
-  g: 71
   a: 65
-  r: 82
-  o: 79
-  s: 83
   f: 70
+  g: 71
+  o: 79
+  r: 82
+  s: 83
+  t: 84
+  v: 86

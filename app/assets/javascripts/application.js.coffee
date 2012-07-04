@@ -31,6 +31,8 @@ $(document).ready ->
             pastDate = new Date(new Date() - (1000 * 3600 * 24 * daysBack)) # yesterday or last week
             document.location = document.location.href.replace /\d{4}\-\d{1,2}\-\d{1,2}/, "#{pastDate.getFullYear()}-#{pastDate.getMonth()+1}-#{pastDate.getDate()}"
           when ScoutSublimeVideo.Helpers.Keyboard.f
+            document.body.webkitRequestFullScreen()
+          when ScoutSublimeVideo.Helpers.Keyboard.r
             $.ajax(
               type: 'POST'
               url: "/take/#{ScoutSublimeVideo.carousel.currentCell.info.token}"

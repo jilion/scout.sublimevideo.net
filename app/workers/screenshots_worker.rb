@@ -21,11 +21,6 @@ class ScreenshotsWorker
   # threshold of video plays and for which the latest screenshot is older
   # than a given days interval.
   #
-  # @param [Hash] opts
-  # @option opts [Fixnum] plays_threshold Threshold of video plays that
-  #  a site must have in order to be screenshoted.
-  # @option opts [Fixnum] days_interval Days interval between two
-  #  screenshots.
   # @see #take_initial_screenshots
   def take_activity_screenshots
     tokens_to_activity_screenshot do |token|
@@ -51,6 +46,11 @@ class ScreenshotsWorker
   #
   # @param [Symbol, String] group_iterator A group iterator method name to
   #  iterate over the sites by batch. Useful for testing.
+  # @param [Hash] opts
+  # @option opts [Fixnum] plays_threshold Threshold of video plays that
+  #  a site must have in order to be screenshoted.
+  # @option opts [Fixnum] days_interval Days interval between two
+  #  screenshots.
   # @see #take_initial_screenshots
   def tokens_to_activity_screenshot(group_iterator = :find_in_batches, opts = { plays_threshold: 10, days_interval: 5.days.ago })
     Site.active.with_hostname.with_min_billable_video_views(opts[:plays_threshold]).send(group_iterator) do |sites_group|
