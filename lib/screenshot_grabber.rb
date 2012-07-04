@@ -40,7 +40,11 @@ class ScreenshotGrabber
   end
 
   def screenshot_referrer_or_hostname(tempfile)
-    success = take_screenshot!(referrer_for_screenshot, tempfile) if referrer_for_screenshot
+    success = false
+    if referrer_for_screenshot
+      success = take_screenshot!(referrer_for_screenshot, tempfile)
+      Rails.logger.info "Couldn't screenshot referrer #{referrer_for_screenshot}, will try with #{hostname_for_screenshot} instead." unless success
+    end
     success = take_screenshot!(hostname_for_screenshot, tempfile) unless success
 
     success

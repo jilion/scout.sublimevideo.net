@@ -219,22 +219,24 @@ class ScoutSublimeVideo.Carousel
   setupKeyboardObservers: ->
     # Limited keyboard support for now
     $(window).on 'keydown', (event) =>
-      switch event.which
-        when ScoutSublimeVideo.Helpers.Keyboard.space
-          this.toggleMagnifyMode()
-        when ScoutSublimeVideo.Helpers.Keyboard.o
-          ScoutSublimeVideo.carousel.openSiteLink()
-        when ScoutSublimeVideo.Helpers.Keyboard.a
-          ScoutSublimeVideo.carousel.openAdminLink()
-        when ScoutSublimeVideo.Helpers.Keyboard.s
-          if @slideshowTimer
-            this.stopSlideshow()
+      unless event.metaKey
+        event.preventDefault()
+        switch event.which
+          when ScoutSublimeVideo.Helpers.Keyboard.space
+            this.toggleMagnifyMode()
+          when ScoutSublimeVideo.Helpers.Keyboard.o
+            ScoutSublimeVideo.carousel.openSiteLink()
+          when ScoutSublimeVideo.Helpers.Keyboard.a
+            ScoutSublimeVideo.carousel.openAdminLink()
+          when ScoutSublimeVideo.Helpers.Keyboard.s
+            if @slideshowTimer
+              this.stopSlideshow()
+            else
+              this.startSlideshow(0)
           else
-            this.startSlideshow(0)
-        else
-          @keys[event.keyCode] = true
+            @keys[event.keyCode] = true
 
-      this.keyCheck()
+        this.keyCheck()
 
     $(window).on 'keyup', (event) =>
       @keys[event.keyCode] = false

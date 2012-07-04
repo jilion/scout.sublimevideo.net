@@ -16,6 +16,7 @@ $(document).ready ->
   if $('#carousel').exists()
     $(document).on 'keydown', (event) =>
       unless event.metaKey
+        event.preventDefault()
         switch event.which
           when ScoutSublimeVideo.Helpers.Keyboard.up
             ScoutSublimeVideo.submitForm('#backward', event)
@@ -31,6 +32,9 @@ $(document).ready ->
             pastDate = new Date(new Date() - (1000 * 3600 * 24 * daysBack)) # yesterday or last week
             document.location = document.location.href.replace /\d{4}\-\d{1,2}\-\d{1,2}/, "#{pastDate.getFullYear()}-#{pastDate.getMonth()+1}-#{pastDate.getDate()}"
           when ScoutSublimeVideo.Helpers.Keyboard.f
+            # if document.webkitIsFullScreen
+            #   document.webkitCancelFullScreen()
+            # else
             document.body.webkitRequestFullScreen()
           when ScoutSublimeVideo.Helpers.Keyboard.r
             $.ajax(

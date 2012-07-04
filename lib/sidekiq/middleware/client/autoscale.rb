@@ -7,7 +7,7 @@ module Sidekiq
       class Autoscale
         def call(worker_class, item, queue)
           yield
-          Wrappers::Heroku.workers = 1
+          Wrappers::Heroku.workers = 1 unless Wrappers::Heroku.workers == 1
         end
       end
 
