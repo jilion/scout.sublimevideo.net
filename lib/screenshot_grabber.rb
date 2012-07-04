@@ -64,7 +64,9 @@ class ScreenshotGrabber
 
   def referrer_for_screenshot
     @referrer_for_screenshot ||= begin
-      referrer.url if referrer = Referrer.where(token: @site_token).by_hits.first
+      if referrer = Referrer.where(token: @site_token).by_hits.first
+        referrer.url
+      end
     end
   end
 
