@@ -34,7 +34,7 @@ describe ScreenshotGrabber do
           u: referrer_url,
           f: image
         )
-        screenshoted_site.should_not_receive(:update_attribute)
+        screenshoted_site.should_not_receive(:set)
 
         screenshot_grabber.take!
       end
@@ -51,7 +51,7 @@ describe ScreenshotGrabber do
             u: referrer_url,
             f: image
           )
-          screenshoted_site.should_receive(:update_attribute).with(:lfa, nil)
+          screenshoted_site.should_receive(:set).with(:lfa, nil)
 
           screenshot_grabber.take!
         end
@@ -68,7 +68,7 @@ describe ScreenshotGrabber do
       it 'sets the :lfa field to the ScreenshotedSite' do
         screenshot_grabber.should_receive(:with_tempfile_image) { raise RuntimeError }
         Screenshot.should_not_receive(:create!)
-        screenshoted_site.should_receive(:update_attribute).with(:lfa, anything)
+        screenshoted_site.should_receive(:set).with(:lfa, anything)
 
         screenshot_grabber.take!
       end

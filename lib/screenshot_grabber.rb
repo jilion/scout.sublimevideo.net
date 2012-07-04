@@ -65,7 +65,7 @@ class ScreenshotGrabber
   def referrer_for_screenshot
     @referrer_for_screenshot ||= begin
       if referrer = Referrer.where(token: @site_token).by_hits.first
-        referrer.url
+        referrer.url =~ %r{wp-content/plugins/sublimevideo-official} ? nil : referrer.url # don't screenshot unaccessible WP page
       end
     end
   end
