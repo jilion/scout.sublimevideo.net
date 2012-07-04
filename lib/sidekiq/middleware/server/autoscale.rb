@@ -7,9 +7,9 @@ module Sidekiq
       class Autoscale
         def call(worker, msg, queue)
           yield
-          Rails.logger.info workers.inspect
-          Rails.logger.info "workers.one? : #{workers.one?}"
-          Rails.logger.info "workers.first == worker : #{workers.first == worker}"
+          ::Rails.logger.info workers.inspect
+          ::Rails.logger.info "workers.one? : #{workers.one?}"
+          ::Rails.logger.info "workers.first == worker : #{workers.first == worker}"
           Wrappers::Heroku.workers = 0 if backlog.zero? # && workers.one? && workers.first == worker
         end
 
