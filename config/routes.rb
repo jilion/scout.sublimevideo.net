@@ -16,5 +16,5 @@ ScoutSublimevideo::Application.routes.draw do
 
   get 'stats' => 'stats#index', as: 'stats'
 
-  root to: redirect("/new/#{I18n.l(Time.now.utc.midnight, format: :Y_m_d)}")
+  root to: redirect("/new/#{I18n.l(Time.now.yesterday.midnight, format: :Y_m_d)}")
 end

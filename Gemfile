@@ -6,22 +6,22 @@ gem 'bundler', '~> 1.2.0.pre.1'
 
 gem 'rails',   '3.2.6'
 gem 'sinatra', require: nil
-gem 'pg',      '~> 0.13.2'
+gem 'pg',      '~> 0.14.0'
 gem 'squeel',  '~> 1.0.6'
 gem 'mongoid', '~> 3.0.0.rc'
 
 # Internals
-gem 'fog',                 '~> 1.3.1'
+gem 'fog',                 '~> 1.4.0'
 gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/processing/mime_types']
 gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
 gem 'mini_magick',         '~> 3.4.0'
 gem 'sidekiq',             '~> 2.0.2'
-gem 'heroku'
+gem 'heroku',              '~> 2.28.8'
 
 # Views
-gem 'slim'
-gem 'jquery-rails'
-gem 'acts-as-taggable-on', '~> 2.2.2'
+gem 'slim',                '~> 1.2.2'
+gem 'jquery-rails',        '~> 2.0.2'
+gem 'acts-as-taggable-on', '~> 2.3.1'
 
 # Auth / Admin
 gem 'devise', '~> 2.1.2'
@@ -41,13 +41,13 @@ group :assets do
 end
 
 group :production do
-  gem 'oink'
+  gem 'oink', '~> 0.9.3'
 end
 
 group :staging, :production do
-  gem 'thin'
-  gem 'rpm_contrib'
-  gem 'newrelic_rpm'
+  gem 'thin',         '~> 1.4.1'
+  gem 'rpm_contrib',  '~> 2.1.11'
+  gem 'newrelic_rpm', '~> 3.4.0.1'
 end
 
 group :development do
@@ -86,7 +86,7 @@ group :tools do
   # Guard
   gem 'growl'
   gem 'coolline'
-  gem 'guard', github: 'guard/guard', branch: 'coolline'
+  gem 'guard'
   gem 'guard-pow'
   # gem 'guard-redis', github: 'guard/guard-redis'
   # gem 'guard-redis', path: '~/github/guard-redis'
