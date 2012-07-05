@@ -7,10 +7,7 @@ module Sidekiq
       class Autoscale
         def call(worker, msg, queue)
           yield
-          if backlog.zero? && Wrappers::Heroku.workers > 0
-            sleep 20 # let the time for other thread to process... (it's lame but...)
-            Wrappers::Heroku.workers = 0
-          end
+          Wrappers::Heroku.workers = 0 if backlog.zero? && Wrappers::Heroku.workers > 0
         end
 
         def backlog
