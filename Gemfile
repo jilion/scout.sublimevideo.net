@@ -86,7 +86,6 @@ group :tools do
   # Guard
   gem 'growl'
   gem 'coolline'
-  gem 'guard'
   gem 'guard-pow'
   # gem 'guard-redis', github: 'guard/guard-redis'
   # gem 'guard-redis', path: '~/github/guard-redis'

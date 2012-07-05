@@ -1,5 +1,20 @@
-.yardoc
+## PROJECT::GENERAL
+coverage
+rdoc
+*.dat
+tmp/restart.txt
+backup.db
 config/env.yml
-doc
 public/screenshots
 public/assets
+logfile
+db/*.sqlite3
+db/backups/*
+doc
+.sass-cache/
+vendor/ruby
+vendor/bundler
+!.bundle
+.env
+uploads
+.tddium*
