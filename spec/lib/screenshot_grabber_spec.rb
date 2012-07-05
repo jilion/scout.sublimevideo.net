@@ -5,7 +5,7 @@ require File.expand_path('lib/screenshot_grabber')
 describe ScreenshotGrabber do
   before do
     stub_rails
-    stub_class 'ScreenshotedSite', 'Screenshot', 'Site'
+    stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
     screenshot_grabber.stub(logger: '')
   end
 
@@ -28,7 +28,7 @@ describe ScreenshotGrabber do
       end
 
       it 'creates a Screenshot with the image' do
-        screenshot_grabber.should_receive(:with_tempfile_image).and_yield(image)
+        screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
         Screenshot.should_receive(:create!).with(
           site: screenshoted_site,
           u: referrer_url,
@@ -45,7 +45,7 @@ describe ScreenshotGrabber do
         end
 
         it 'updates ScreenshotedSite :lfa field  to nil' do
-          screenshot_grabber.should_receive(:with_tempfile_image).and_yield(image)
+          screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
           Screenshot.should_receive(:create!).with(
             site: screenshoted_site,
             u: referrer_url,
@@ -75,6 +75,9 @@ describe ScreenshotGrabber do
     end
   end
 
+  # Private methods
+  #################
+
   describe '#take_screenshot!' do
     it 'adds the screenshot to the ScreenshotedSite\'s screenshots collection and save it' do
       screenshot_grabber.should_receive(:system).with("phantomjs --ignore-ssl-errors=yes #{Rails.root.join('lib', 'phantomjs-scripts', 'rasterize.js').to_s} #{referrer_url} tmp/foo.jpg")
@@ -89,7 +92,8 @@ describe ScreenshotGrabber do
     end
 
     it 'yield with an url and an image that is not empty' do
-      screenshot_grabber.send(:with_tempfile_image) do |img|
+      screenshot_grabber.send(:with_tempfile_image) do |url, img|
+        url.should eq referrer_url
         img.size.should > 0
       end
     end
@@ -105,22 +109,36 @@ describe ScreenshotGrabber do
       context 'screenshot is successful' do
         before do
           screenshot_grabber.should_receive(:take_screenshot!).with(referrer_url, tempfile).and_return(true)
+          File.should_receive(:size?).with(tempfile.path).and_return(true)
         end
 
         it 'takes a screenshot using the referrer' do
-          screenshot_grabber.send(:screenshot_referrer_or_hostname, tempfile).should be_true
+          screenshot_grabber.send(:screenshot_referrer_or_hostname, tempfile).should eq referrer_url
         end
       end
 
       context 'screenshot with referrer is unsuccessful, but successful with hostname' do
         before do
           screenshot_grabber.should_receive(:take_screenshot!).with(referrer_url, tempfile).and_return(false)
+          File.should_receive(:size?).with(tempfile.path).and_return(false)
           screenshot_grabber.should_receive(:take_screenshot!).with(hostname_url, tempfile).and_return(true)
         end
 
         it 'takes a screenshot using the referrer' do
-          screenshot_grabber.send(:screenshot_referrer_or_hostname, tempfile).should be_true
+          screenshot_grabber.send(:screenshot_referrer_or_hostname, tempfile).should eq hostname_url
         end
+      end
+    end
+  end
+
+  describe '#referrer_for_screenshot' do
+    context 'referrer is a WP plugin path' do
+      before do
+        ::Referrer.stub_chain(:where, :by_hits, :first).and_return(stub(url: 'http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php'))
+      end
+
+      it 'returns nil' do
+        screenshot_grabber.send(:referrer_for_screenshot).should be_nil
       end
     end
   end

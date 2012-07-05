@@ -10,8 +10,8 @@ class ScreenshotGrabber
   def take!
     return unless site
 
-    with_tempfile_image do |image|
-      Screenshot.create!(site: screenshoted_site, u: referrer_for_screenshot, f: image)
+    with_tempfile_image do |url, image|
+      Screenshot.create!(site: screenshoted_site, u: url, f: image)
       screenshoted_site.set(:lfa, nil) unless screenshoted_site.lfa.nil?
     end
   rescue => ex
@@ -25,12 +25,9 @@ class ScreenshotGrabber
   def with_tempfile_image
     begin
       tempfile = Tempfile.new(['screenshot', '.jpg'])
-      success = screenshot_referrer_or_hostname(tempfile)
+      screenshoted_url = screenshot_referrer_or_hostname(tempfile)
 
-      raise "Screenshot for #{referrer_for_screenshot} (#{@site_token}) was not successful!" unless success
-      raise "#{tempfile.path} is empty!" unless File.size?(tempfile.path)
-
-      yield(tempfile)
+      yield(screenshoted_url, tempfile)
     ensure
       tempfile.close
       tempfile.unlink
@@ -38,14 +35,18 @@ class ScreenshotGrabber
   end
 
   def screenshot_referrer_or_hostname(tempfile)
-    success = false
-    if referrer_for_screenshot
-      success = take_screenshot!(referrer_for_screenshot, tempfile)
-      Rails.logger.info "Couldn't screenshot referrer #{referrer_for_screenshot}, will try with #{hostname_for_screenshot} instead." unless success
-    end
-    success = take_screenshot!(hostname_for_screenshot, tempfile) unless success
+    url = nil
 
-    success
+    if url = referrer_for_screenshot
+      log :info, "Couldn't capture referrer #{url}, will try #{hostname_for_screenshot}" unless take_screenshot!(url, tempfile)
+    end
+
+    unless File.size?(tempfile.path)
+      url = hostname_for_screenshot
+      raise "Couldn't screenshot hostname #{url} (#{@site_token})!" unless take_screenshot!(url, tempfile)
+    end
+
+    url
   end
 
   def take_screenshot!(url, file)
@@ -80,7 +81,7 @@ class ScreenshotGrabber
 
   def log(level, message)
     if level == 'error' || @options[:debug]
-      logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token} | URL: #{referrer_for_screenshot}\n\t#{message}")
+      logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
     end
   end
 
