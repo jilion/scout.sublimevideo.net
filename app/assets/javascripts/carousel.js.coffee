@@ -23,11 +23,8 @@ class ScoutSublimeVideo.Carousel
     @magnifyMode      = false
     @touchEnabled     = true
 
-    @keys = {}
-    @keys[ScoutSublimeVideo.Helpers.Keyboard.left] = false
-    @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = false
-    @keys[ScoutSublimeVideo.Helpers.Keyboard.up] = false
-    @keys[ScoutSublimeVideo.Helpers.Keyboard.down] = false
+    @keys     = { left: false, right: false, up: false, down: false }
+    @keymap   = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
     @keyTimer = null
 
     @slideshowTimer = null
@@ -218,29 +215,18 @@ class ScoutSublimeVideo.Carousel
 
   setupKeyboardObservers: ->
     # Limited keyboard support for now
-    $(window).on 'keydown', (event) =>
-      unless event.metaKey
-        event.preventDefault()
-        switch event.which
-          when ScoutSublimeVideo.Helpers.Keyboard.space
-            this.toggleMagnifyMode()
-          when ScoutSublimeVideo.Helpers.Keyboard.o
-            ScoutSublimeVideo.carousel.openSiteLink()
-          when ScoutSublimeVideo.Helpers.Keyboard.a
-            ScoutSublimeVideo.carousel.openAdminLink()
-          when ScoutSublimeVideo.Helpers.Keyboard.s
-            if @slideshowTimer
-              this.stopSlideshow()
-            else
-              this.startSlideshow(0)
-          else
-            @keys[event.keyCode] = true
-
-        this.keyCheck()
-
-    $(window).on 'keyup', (event) =>
-      @keys[event.keyCode] = false
+    Mousetrap.bind 'space', => this.toggleMagnifyMode()
+    Mousetrap.bind 'o', => this.openSiteLink()
+    Mousetrap.bind 'a', => this.openAdminLink()
+    Mousetrap.bind 's', => if @slideshowTimer then this.stopSlideshow() else this.startSlideshow(0)
+    Mousetrap.bind ['left', 'right', 'up', 'down'], (event) =>
+      @keys[@keymap[event.keyCode]] = true
       this.keyCheck()
+
+    Mousetrap.bind ['left', 'right', 'up', 'down'], (event) =>
+      @keys[@keymap[event.keyCode]] = false
+      this.keyCheck()
+    , 'keyup'
 
     @camera.on 'click', (event) =>
       this.goTo($(event.target).parents('.cell').data('stack-index'))
@@ -264,8 +250,8 @@ class ScoutSublimeVideo.Carousel
         @lastX = event.touches[0].pageX
         dx     = @lastX - @startX
         console.log dx
-        @keys[ScoutSublimeVideo.Helpers.Keyboard.left]  = dx > 0 and dx > 20
-        @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = dx < 0 and dx < -20
+        @keys['left']  = dx > 0 and dx > 20
+        @keys['right'] = dx < 0 and dx < -20
         this.keyCheck()
         @startX = @lastX
       false
@@ -283,12 +269,11 @@ class ScoutSublimeVideo.Carousel
     @touchEnabled = true
 
   stopTouch: ->
-    @keys[ScoutSublimeVideo.Helpers.Keyboard.left] = @keys[ScoutSublimeVideo.Helpers.Keyboard.right] = false
+    @keys['left'] = @keys['right'] = false
     @startX = @lastX = 0
 
   keyCheck: ->
-    if @keys[ScoutSublimeVideo.Helpers.Keyboard.left] or @keys[ScoutSublimeVideo.Helpers.Keyboard.right] \
-    or @keys[ScoutSublimeVideo.Helpers.Keyboard.up] or @keys[ScoutSublimeVideo.Helpers.Keyboard.down]
+    if @keys['left'] or @keys['right'] or @keys['up'] or @keys['down']
       this.repeatTimer(@options['initialKeyRepeatDelay']) if @keyTimer is null
     else
       this.killTimer('keyTimer')
@@ -299,8 +284,8 @@ class ScoutSublimeVideo.Carousel
 
   updateKeys: ->
     newCellIndex  = @currentCellIndex
-    newCellIndex -= @options['rows'] if @keys[ScoutSublimeVideo.Helpers.Keyboard.left] and newCellIndex >= @options['rows']
-    newCellIndex += @options['rows'] if @keys[ScoutSublimeVideo.Helpers.Keyboard.right] and (newCellIndex + @options['rows']) < @cells.length
+    newCellIndex -= @options['rows'] if @keys['left'] and newCellIndex >= @options['rows']
+    newCellIndex += @options['rows'] if @keys['right'] and (newCellIndex + @options['rows']) < @cells.length
 
     unless newCellIndex is @currentCellIndex
       this.stopSlideshow()
