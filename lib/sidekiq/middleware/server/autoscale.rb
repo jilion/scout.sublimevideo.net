@@ -8,8 +8,8 @@ module Sidekiq
         def call(worker, msg, queue)
           yield
 
-          if backlog.zero? && workers.size < 2 && Wrappers::Heroku.workers > 0
-            Wrappers::Heroku.workers = 0
+          if backlog.zero?
+            Wrappers::Heroku.workers = 0 if Wrappers::Heroku.workers > 0
           end
         end
 
