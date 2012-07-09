@@ -7,7 +7,11 @@ module Sidekiq
       class Autoscale
         def call(worker, msg, queue)
           yield
-          Wrappers::Heroku.workers = 0 if backlog.zero? && Wrappers::Heroku.workers > 0
+
+          if backlog.zero?
+            sleep(1) while workers.size > 1
+            Wrappers::Heroku.workers = 0 if Wrappers::Heroku.workers > 0
+          end
         end
 
         def backlog
