@@ -21,7 +21,7 @@ $(document).ready ->
       Mousetrap.bind 'v',    ScoutSublimeVideo.toggleView
       Mousetrap.bind 't',    ScoutSublimeVideo.moveToYesterdayOrLastWeek
       Mousetrap.bind 'f',    ScoutSublimeVideo.toggleFullscreen
-      Mousetrap.bind 'r',    -> ScoutSublimeVideo.retakeScreenshot
+      Mousetrap.bind 'r',    ScoutSublimeVideo.retakeScreenshot
 
 window.ScoutSublimeVideo.submitForm = (formId, event) ->
   event.preventDefault()
