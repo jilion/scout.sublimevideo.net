@@ -12,7 +12,7 @@ class ScreenshotedSite
     end
   end
 
-  index :t, unique: true
+  index({ t: 1 }, { unique: true })
 
   validates :t, presence: true, uniqueness: true
 
