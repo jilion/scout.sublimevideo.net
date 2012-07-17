@@ -35,8 +35,12 @@ class ScreenshotsWorker
   # @param [Symbol, String] group_iterator A group iterator method name to
   #  iterate over the sites by batch. Useful for testing.
   # @see #take_initial_screenshots
-  def tokens_to_initially_screenshot(group_iterator = :find_in_batches, opts = { days_interval: 10.days.ago })
-    tokens_to_not_screenshot = ScreenshotedSite.not_failed_or_failed_after(opts[:days_interval]).map(&:t)
+  def tokens_to_initially_screenshot(group_iterator = :find_in_batches)
+    tokens_to_not_screenshot = ScreenshotedSite.where(lfa: nil).map(&:t)
+    (1...ScreenshotedSite::MAX_ATTEMPTS).each do |n|
+      tokens_to_not_screenshot += ScreenshotedSite.cannot_be_retried(n).map(&:t)
+    end
+    tokens_to_not_screenshot += ScreenshotedSite.with_max_attempts.map(&:t)
     Site.active.with_hostname.send(group_iterator) do |sites_group|
       (sites_group.map(&:token) - tokens_to_not_screenshot).each { |token| yield token }
     end

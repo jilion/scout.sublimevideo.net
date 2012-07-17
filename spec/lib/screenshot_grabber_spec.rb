@@ -27,34 +27,17 @@ describe ScreenshotGrabber do
         screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
       end
 
-      it 'creates a Screenshot with the image' do
+      it 'creates a Screenshot with the image, sets :lfa field to nil and :fac field to 0' do
         screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
         Screenshot.should_receive(:create!).with(
           site: screenshoted_site,
           u: referrer_url,
           f: image
         )
-        screenshoted_site.should_not_receive(:set)
+        screenshoted_site.should_receive(:set).with(:lfa, nil).ordered
+        screenshoted_site.should_receive(:set).with(:fac, 0).ordered
 
         screenshot_grabber.take!
-      end
-
-      context 'ScreenshotedSite :lfa field is not nil' do
-        before do
-          screenshoted_site.stub(lfa: Time.now.utc)
-        end
-
-        it 'updates ScreenshotedSite :lfa field  to nil' do
-          screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
-          Screenshot.should_receive(:create!).with(
-            site: screenshoted_site,
-            u: referrer_url,
-            f: image
-          )
-          screenshoted_site.should_receive(:set).with(:lfa, nil)
-
-          screenshot_grabber.take!
-        end
       end
     end
 
@@ -68,7 +51,8 @@ describe ScreenshotGrabber do
       it 'sets the :lfa field to the ScreenshotedSite' do
         screenshot_grabber.should_receive(:with_tempfile_image) { raise RuntimeError }
         Screenshot.should_not_receive(:create!)
-        screenshoted_site.should_receive(:set).with(:lfa, anything)
+        screenshoted_site.should_receive(:touch).with(:lfa)
+        screenshoted_site.should_receive(:inc).with(:fac)
 
         screenshot_grabber.take!
       end

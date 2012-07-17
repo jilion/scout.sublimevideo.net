@@ -6,7 +6,7 @@ require File.expand_path('app/workers/screenshots_worker')
 
 describe ScreenshotsWorker do
   stub_class 'Site', 'ScreenshotedSite', 'ScreenshotWorker'
-
+  
   let(:worker)     { described_class.new }
   let(:site_token) { 'site_token' }
 
@@ -43,16 +43,21 @@ describe ScreenshotsWorker do
   # = Private methods =
   # ===================
   describe '#tokens_to_initially_screenshot' do
-    let(:screenshoted_sites) { [stub(t: 'abc')] }
-    let(:active_sites)       { [[stub(token: site_token), stub(token: 'abc'), stub(token: '123')]] }
+    let(:screenshoted_sites1) { [stub(t: 'abc')] }
+    let(:screenshoted_sites2) { [stub(t: 'cba')] }
+    let(:screenshoted_sites3) { [stub(t: 'def')] }
+    let(:active_sites)       { [[stub(token: site_token), stub(token: 'abc'), stub(token: 'cba'), stub(token: 'def'), stub(token: '123')]] }
     before do
-      ScreenshotedSite.should_receive(:not_failed_or_failed_after) { screenshoted_sites }
-      Site.stub_chain(:active, :with_hostname)                     { active_sites }
+      ScreenshotedSite::MAX_ATTEMPTS = 5 unless defined? ScreenshotedSite::MAX_ATTEMPTS
+      ScreenshotedSite.should_receive(:where)                              { screenshoted_sites1 }
+      ScreenshotedSite.should_receive(:cannot_be_retried).exactly(4).times { screenshoted_sites2 }
+      ScreenshotedSite.should_receive(:with_max_attempts)                  { screenshoted_sites3 }
+      Site.stub_chain(:active, :with_hostname)                             { active_sites }
     end
 
     it 'yields 2 tokens' do
       sum = 0
-      worker.send(:tokens_to_initially_screenshot, :each, { days_interval: 5 }) do |token|
+      worker.send(:tokens_to_initially_screenshot, :each) do |token|
         token.should_not eq 'abc'
         sum += 1
       end

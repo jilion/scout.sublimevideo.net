@@ -4,20 +4,18 @@ require File.expand_path('spec/config/carrierwave')
 require File.expand_path('app/uploaders/screenshot_uploader')
 
 describe ScreenshotUploader do
+  let(:screenshot) { stub(id: '0123456789', site: stub(t: 'site_token'), u: 'http://sublimevideo.net') }
+  let(:image)      { fixture_file('sublimevideo.net.jpg') }
+  let(:uploader)   { described_class.new(screenshot, :f) }
+
   before do
     stub_rails
     uploader.store!(image)
   end
   after do
     uploader.remove!
-    Dir.delete(Rails.root.join('uploads', 'screenshots'))
-    Dir.delete(Rails.root.join('uploads', 'tmp'))
-    Dir.delete(Rails.root.join('uploads'))
+    Dir.delete(Rails.root.join('screenshots'))
   end
-
-  let(:screenshot) { stub(site: stub(t: 'site_token'), u: 'http://sublimevideo.net') }
-  let(:image)      { fixture_file('sublimevideo.net.jpg') }
-  let(:uploader)   { described_class.new(screenshot, :f) }
 
   it "is stored in ENV['S3_SCREENSHOTS_BUCKET'] bucket" do
     uploader.fog_directory.should eq ENV['S3_SCREENSHOTS_BUCKET']

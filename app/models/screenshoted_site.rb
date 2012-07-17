@@ -3,8 +3,12 @@ class ScreenshotedSite
   include Mongoid::Timestamps
   include ApplicationHelper
 
+  MAX_ATTEMPTS = 5
+  DELAY = proc { |count| count ** 2 }
+
   field :t,   type: String
   field :lfa, type: DateTime # last failed at => used for not retrying to take a screenshot everytime
+  field :fac, type: Integer, default: 0 # failed attempts count
 
   embeds_many :screenshots, cascade_callbacks: true, store_as: 's' do
     def latest
@@ -16,7 +20,8 @@ class ScreenshotedSite
 
   validates :t, presence: true, uniqueness: true
 
-  scope :not_failed_or_failed_after, ->(date) { any_of([{ lfa: nil }, { :lfa.gte => date.to_i }]) }
+  scope :cannot_be_retried, ->(attempts) { where(fac: attempts).where(:lfa.gte => ScreenshotedSite::DELAY.call(attempts).days.ago) }
+  scope :with_max_attempts, -> { where(:fac.gte => ScreenshotedSite::MAX_ATTEMPTS) }
 
   class << self
     # Returns the screenshoted sites corresponding to the given Site array
