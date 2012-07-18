@@ -52,7 +52,7 @@ describe ScreenshotGrabber do
         screenshot_grabber.should_receive(:with_tempfile_image) { raise RuntimeError }
         Screenshot.should_not_receive(:create!)
         screenshoted_site.should_receive(:touch).with(:lfa)
-        screenshoted_site.should_receive(:inc).with(:fac)
+        screenshoted_site.should_receive(:inc).with(:fac, 1)
 
         screenshot_grabber.take!
       end
