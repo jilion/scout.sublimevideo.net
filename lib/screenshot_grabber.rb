@@ -4,7 +4,7 @@ class ScreenshotGrabber
 
   def initialize(site_token, options = { debug: false, external_log: false })
     @site_token = site_token
-    @options = options
+    @options    = options
   end
 
   def take!
@@ -89,7 +89,14 @@ class ScreenshotGrabber
   end
 
   # Taken from http://stackoverflow.com/questions/8146070/how-to-catch-memory-quota-exceptions-in-a-heroku-worker
+  def self.check_memory?
+    @@check_memory ||= File.exists?("/proc/self/statm")
+  end
+
   def check_memory!
+    return unless self.class.check_memory?
+
+    log :info, "Current memory: #{memory}"
     raise 'AboutToRunOutOfMemory' if memory > 490.megabytes # Or whatever size your worried about
   end
 
@@ -100,10 +107,10 @@ class ScreenshotGrabber
   end
 
   def self.statm_page_size
-    @statm_page_size ||= begin
-      sys_call = SystemCall.execute("getconf PAGESIZE")
-      if sys_call.success?
-        sys_call.stdout.strip.to_i / 1024
+    @@statm_page_size ||= begin
+      page_size = `getconf PAGESIZE`
+      if $?.success?
+        page_size.strip.to_i / 1024
       else
         4
       end
