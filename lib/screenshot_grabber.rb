@@ -1,6 +1,7 @@
 require 'tempfile'
 
 class ScreenshotGrabber
+  include ActionView::Helpers::NumberHelper
 
   def initialize(site_token, options = { debug: false, external_log: false })
     @site_token = site_token
