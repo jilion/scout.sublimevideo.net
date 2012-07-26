@@ -8,6 +8,7 @@ class ScreenshotGrabber
   end
 
   def take!
+    check_memory!
     return unless site
 
     with_tempfile_image do |url, image|
@@ -84,6 +85,28 @@ class ScreenshotGrabber
   def log(level, message)
     if level == 'error' || @options[:debug]
       logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
+    end
+  end
+
+  # Taken from http://stackoverflow.com/questions/8146070/how-to-catch-memory-quota-exceptions-in-a-heroku-worker
+  def check_memory!
+    raise 'AboutToRunOutOfMemory' if memory > 490.megabytes # Or whatever size your worried about
+  end
+
+  # Taken from Oink
+  def memory
+    pages = File.read("/proc/self/statm")
+    pages.to_i * self.class.statm_page_size
+  end
+
+  def self.statm_page_size
+    @statm_page_size ||= begin
+      sys_call = SystemCall.execute("getconf PAGESIZE")
+      if sys_call.success?
+        sys_call.stdout.strip.to_i / 1024
+      else
+        4
+      end
     end
   end
 

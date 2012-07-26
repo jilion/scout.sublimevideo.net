@@ -40,10 +40,6 @@ group :assets do
   gem 'closure-compiler', '~> 1.1.6'
 end
 
-group :production do
-  gem 'oink', '~> 0.9.3'
-end
-
 group :staging, :production do
   gem 'thin',         '~> 1.4.1'
   gem 'rpm_contrib',  '~> 2.1.11'
