@@ -83,7 +83,7 @@ class ScreenshotGrabber
   end
 
   def log(level, message)
-    if level == 'error' || @options[:debug]
+    if level == :error || @options[:debug]
       logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
     end
   end
@@ -96,7 +96,7 @@ class ScreenshotGrabber
   def check_memory!
     return unless self.class.check_memory?
 
-    log :info, "Current memory: #{memory}"
+    log :error, "Current memory: #{number_to_human_size(memory)}"
     raise 'AboutToRunOutOfMemory' if memory > 490.megabytes # Or whatever size your worried about
   end
 
