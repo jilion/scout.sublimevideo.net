@@ -15,6 +15,11 @@ module Wrappers
         Rails.logger.info "Scaling to #{qty} worker"
       end
     end
+
+    def self.restart_workers
+      client.workers = 0
+      client.workers = 1
+    end
   end
 
 end

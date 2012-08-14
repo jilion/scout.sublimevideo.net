@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'action_view/helpers/number_helper'
 
 class ScreenshotGrabber
   include ActionView::Helpers::NumberHelper
@@ -9,8 +10,8 @@ class ScreenshotGrabber
   end
 
   def take!
-    check_memory!
     return unless site
+    restart_workers_if_needed
 
     with_tempfile_image do |url, image|
       Screenshot.create!(site: screenshoted_site, u: url, f: image)
@@ -89,33 +90,9 @@ class ScreenshotGrabber
     end
   end
 
-  # Taken from http://stackoverflow.com/questions/8146070/how-to-catch-memory-quota-exceptions-in-a-heroku-worker
-  def self.check_memory?
-    @@check_memory ||= File.exists?("/proc/self/statm")
-  end
-
-  def check_memory!
-    return unless self.class.check_memory?
-
-    log :error, "Current memory: #{number_to_human_size(memory)}"
-    raise 'AboutToRunOutOfMemory' if memory > 490.megabytes # Or whatever size your worried about
-  end
-
-  # Taken from Oink
-  def memory
-    pages = File.read("/proc/self/statm")
-    pages.to_i * self.class.statm_page_size
-  end
-
-  def self.statm_page_size
-    @@statm_page_size ||= begin
-      page_size = `getconf PAGESIZE`
-      if $?.success?
-        page_size.strip.to_i / 1024
-      else
-        4
-      end
-    end
+  def restart_workers_if_needed
+    search = JSON[`curl -v -H "X-Papertrail-Token: #{ENV['PAPERTRAIL_API_TOKEN']}" "https://papertrailapp.com/api/v1/events/search.json?q='R14'"`]
+    Wrappers::Heroku.restart_workers if Time.parse(search['events'].last['received_at']) > 30.seconds.ago
   end
 
 end

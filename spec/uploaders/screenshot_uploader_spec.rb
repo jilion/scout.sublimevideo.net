@@ -14,7 +14,7 @@ describe ScreenshotUploader do
   end
   after do
     uploader.remove!
-    Dir.delete(Rails.root.join('screenshots'))
+    Dir.delete(Rails.root.join('screenshots')) if File.directory?(Rails.root.join('screenshots'))
   end
 
   it "is stored in ENV['S3_SCREENSHOTS_BUCKET'] bucket" do

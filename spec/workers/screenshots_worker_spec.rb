@@ -6,7 +6,7 @@ require File.expand_path('app/workers/screenshots_worker')
 
 describe ScreenshotsWorker do
   stub_class 'Site', 'ScreenshotedSite', 'ScreenshotWorker'
-  
+
   let(:worker)     { described_class.new }
   let(:site_token) { 'site_token' }
 

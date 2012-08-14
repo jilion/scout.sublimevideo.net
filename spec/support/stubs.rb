@@ -16,10 +16,10 @@ def stub_rails
       def self.logger
         o = OpenStruct.new
         def o.info(*args)
-          puts args
+          # puts args
         end
         def o.error(*args)
-          puts args
+          # puts args
         end
         o
       end

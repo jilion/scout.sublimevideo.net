@@ -6,7 +6,6 @@ describe ScreenshotGrabber do
   before do
     stub_rails
     stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
-    screenshot_grabber.stub(logger: '')
   end
 
   let(:screenshot_grabber) { described_class.new(site_token) }
@@ -25,6 +24,7 @@ describe ScreenshotGrabber do
         screenshot_grabber.stub(site: site)
         screenshot_grabber.stub(screenshoted_site: screenshoted_site)
         screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
+        screenshot_grabber.stub(restart_workers_if_needed: true)
       end
 
       it 'creates a Screenshot with the image, sets :lfa field to nil and :fac field to 0' do
@@ -46,6 +46,7 @@ describe ScreenshotGrabber do
         screenshot_grabber.stub(site: site)
         screenshot_grabber.stub(screenshoted_site: screenshoted_site)
         screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
+        screenshot_grabber.stub(restart_workers_if_needed: true)
       end
 
       it 'sets the :lfa field to the ScreenshotedSite' do
