@@ -11,7 +11,6 @@ class ScreenshotGrabber
 
   def take!
     return unless site
-    restart_workers_if_needed
 
     with_tempfile_image do |url, image|
       Screenshot.create!(site: screenshoted_site, u: url, f: image)
@@ -88,11 +87,6 @@ class ScreenshotGrabber
     if level == :error || @options[:debug]
       logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
     end
-  end
-
-  def restart_workers_if_needed
-    search = JSON[`curl -v -H "X-Papertrail-Token: #{ENV['PAPERTRAIL_API_TOKEN']}" "https://papertrailapp.com/api/v1/events/search.json?q='R14'"`]
-    Wrappers::Heroku.restart_workers if Time.parse(search['events'].last['received_at']) > 30.seconds.ago
   end
 
 end
