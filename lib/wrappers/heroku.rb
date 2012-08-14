@@ -1,24 +1,26 @@
+require 'heroku-api'
+
 module Wrappers
 
   class Heroku
     def self.client
-      @@heroku ||= ::Heroku::Client.new(ENV['HEROKU_USER'], ENV['HEROKU_PASS'])
+      @@heroku ||= ::Heroku::API.new(api_key: ENV['HEROKU_API_KEY'])
     end
 
     def self.workers
-      client.ps(ENV['HEROKU_APP']).count { |a| a['process'] =~ /worker/ }
+      client.get_ps(ENV['HEROKU_APP']).count { |a| a['process'] =~ /worker/ }
     end
 
     def self.workers=(qty)
       unless workers == qty
-        client.ps_scale(ENV['HEROKU_APP'], type: 'worker', qty: qty)
         Rails.logger.info "Scaling to #{qty} worker"
+        client.post_ps_scale(ENV['HEROKU_APP'], 'worker', qty)
       end
     end
 
     def self.restart_workers
-      client.workers = 0
-      client.workers = 1
+      Rails.logger.info "Restarting worker.1"
+      client.post_ps_restart(ENV['HEROKU_APP'], 'ps' => 'worker.1')
     end
   end
 
