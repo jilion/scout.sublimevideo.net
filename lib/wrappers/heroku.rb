@@ -8,7 +8,7 @@ module Wrappers
     end
 
     def self.workers
-      client.get_ps(ENV['HEROKU_APP']).count { |a| a['process'] =~ /worker/ }
+      client.get_ps(ENV['HEROKU_APP']).body.count { |a| a['process'] =~ /worker/ }
     end
 
     def self.workers=(qty)
