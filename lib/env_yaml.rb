@@ -8,4 +8,3 @@ begin
   end
 rescue StandardError => e
 end
-
