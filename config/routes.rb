@@ -1,13 +1,10 @@
-require 'sidekiq/web'
+require_dependency 'secure_sidekiq_web'
 
 ScoutSublimevideo::Application.routes.draw do
 
   devise_for :admins, path: '', path_names: { sign_in: 'login', sign_out: 'logout' }
 
-  admin_logged_in = lambda { |request| request.env["warden"].authenticate? }
-  constraints admin_logged_in do
-    mount Sidekiq::Web => '/sidekiq'
-  end
+  mount SecureSidekiqWeb => '/sidekiq'
 
   # Sample of named route:
   get  'new/:day' => 'carousel#new_sites_day', as: 'new_sites_day'

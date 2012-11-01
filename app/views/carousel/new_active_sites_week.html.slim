@@ -1,4 +1,4 @@
-= title "New Active Sites of Week #{l(@day, format: :d_b_Y)}"
+- title "New Active Sites of Week #{l(@day, format: :d_b_Y)}"
 
 .hidden_form
   = form_tag new_active_sites_week_url(l(@day - 1.week, format: :Y_m_d)), method: 'get', id: 'backward' do

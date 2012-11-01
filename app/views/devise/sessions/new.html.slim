@@ -1,18 +1,20 @@
+= title 'Log in', false
+
 #content_box
   h3 Log in
 
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+  = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     div
       = f.label :email
-      = f.email_field :email, class: "text"
+      = f.email_field :email, class: 'text'
 
     div
       = f.label :password
-      = f.password_field :password, class: "text"
+      = f.password_field :password, class: 'text'
 
     - if devise_mapping.rememberable?
       div.check_box
         = f.check_box :remember_me
         = f.label :remember_me
 
-    div= f.submit "Log in"
+    div= f.submit 'Log in'
