@@ -29,12 +29,12 @@ gem 'devise', '~> 2.1.2'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.5'
   gem 'coffee-rails', '~> 3.2.2'
 
   # gem 'uglifier', '>= 1.0.3'
   gem 'closure-compiler', '~> 1.1.7'
 end
+gem 'sass-rails',   '~> 3.2.5'
 
 group :staging, :production do
   gem 'thin',         '~> 1.4.1'

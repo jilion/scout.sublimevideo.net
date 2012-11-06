@@ -5,7 +5,7 @@ module Sidekiq
     module Client
 
       class Autoscale
-        def call(worker_class, item, queue)
+        def call(worker_class, msg, queue)
           yield
           Wrappers::Heroku.workers = 1 unless Wrappers::Heroku.workers == 1
         end

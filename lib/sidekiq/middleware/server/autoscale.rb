@@ -8,19 +8,15 @@ module Sidekiq
         def call(worker, msg, queue)
           yield
 
-          if backlog.zero?
-            Wrappers::Heroku.workers = 0 if Wrappers::Heroku.workers > 0
+          if backlog.zero? && !Wrappers::Heroku.workers.zero?
+            Wrappers::Heroku.workers = 0
           end
         end
 
         def backlog
-          Sidekiq.redis do |conn|
-            conn.smembers('queues').inject(0) { |sum, q| sum += conn.llen("queue:#{q}") || 0 }
+          Sidekiq.options[:queues].sum do |queue|
+            Sidekiq::Queue.new(queue).size
           end
-        end
-
-        def workers
-          Sidekiq.redis { |conn| conn.smembers('workers') }
         end
       end
 
