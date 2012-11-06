@@ -73,10 +73,9 @@ group :tools do
   gem 'heroku'
 
   # Guard
-  gem 'growl'
-  gem 'coolline'
+  gem 'ruby_gntp'
+  gem 'rb-fsevent'
+
   gem 'guard-pow'
-  # gem 'guard-redis', github: 'guard/guard-redis'
-  # gem 'guard-redis', path: '~/github/guard-redis'
   gem 'guard-rspec'
 end
