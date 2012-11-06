@@ -15,11 +15,7 @@ namespace :clock do
         Wrappers::Heroku.restart_workers
       end
     else
-      jobs_count = Sidekiq.options[:queues].sum do |queue|
-        Sidekiq::Queue.new(queue).size
-      end
-
-      if jobs_count.zero?
+      if Sidekiq::Queue.new('default').size.zero?
         unless Wrappers::Heroku.workers.zero?
           Rails.logger.info "Scaling to 0 worker!"
           Wrappers::Heroku.workers = 0
