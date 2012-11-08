@@ -1,6 +1,4 @@
-require 'sidekiq/middleware/client/autoscale'
 require 'sidekiq/middleware/client/unique_job'
-require 'sidekiq/middleware/server/autoscale'
 
 Sidekiq.configure_client do |config|
   config.redis = { namespace: 'scout' }

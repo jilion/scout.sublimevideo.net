@@ -7,7 +7,7 @@ namespace :clock do
 
   desc "Restart workers if needed"
   task supervise_workers: :environment do
-    if Sidekiq::Queue.new('default').size.zero?
+    if Sidekiq::Client.registered_queues.sum { |queue| Sidekiq::Queue.new(queue).size }.zero?
       unless Wrappers::Heroku.workers.zero?
         Rails.logger.info "Scaling to 0 worker!"
         Wrappers::Heroku.workers = 0
