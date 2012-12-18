@@ -4,4 +4,4 @@
 :verbose: true
 :concurrency: 15
 :queues:
-  - [default, 1]
+  - [scout, 1]
