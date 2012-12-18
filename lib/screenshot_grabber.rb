@@ -4,6 +4,11 @@ require 'action_view/helpers/number_helper'
 class ScreenshotGrabber
   include ActionView::Helpers::NumberHelper
 
+  SKIPPED_DOMAINS = [
+    /localhost/, /127\.0\.0\.1/,
+    %r{wp-content/plugins/sublimevideo-official}
+  ]
+
   def initialize(site_token, options = { debug: false, external_log: false })
     @site_token = site_token
     @options    = options
@@ -72,7 +77,7 @@ class ScreenshotGrabber
       if referrer = Referrer.where(token: @site_token).by_hits.first
         case referrer.url
         # don't screenshot unaccessible WP page nor local domains
-        when /localhost/, /127\.0\.0\.1/, %r{wp-content/plugins/sublimevideo-official}
+        when *(Site::SKIPPED_DOMAINS.map { |domain| Regexp.new(Regexp.escape(domain)) } + SKIPPED_DOMAINS)
           nil
         else
           referrer.url

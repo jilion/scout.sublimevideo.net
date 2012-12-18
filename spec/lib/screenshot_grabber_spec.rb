@@ -2,6 +2,9 @@ require 'fast_spec_helper'
 require 'active_support/core_ext'
 require File.expand_path('lib/screenshot_grabber')
 
+Site = Class.new unless defined? Site
+Site::SKIPPED_DOMAINS = %w[please-edit.me youtube.com youtu.be vimeo.com dailymotion.com google.com] unless defined? Site::SKIPPED_DOMAINS
+
 describe ScreenshotGrabber do
   before do
     stub_rails
@@ -122,6 +125,18 @@ describe ScreenshotGrabber do
 
       it 'returns nil' do
         screenshot_grabber.send(:referrer_for_screenshot).should be_nil
+      end
+    end
+
+    Site::SKIPPED_DOMAINS.each do |domain|
+      context "referrer is #{domain}" do
+        before do
+          ::Referrer.stub_chain(:where, :by_hits, :first).and_return(stub(url: "http://#{domain}"))
+        end
+
+        it 'returns nil' do
+          screenshot_grabber.send(:referrer_for_screenshot).should be_nil
+        end
       end
     end
   end
