@@ -47,12 +47,22 @@ class ScreenshotGrabber
     url = nil
 
     if url = referrer_for_screenshot
-      log :info, "Couldn't capture referrer #{url}, will try #{hostname_for_screenshot}" unless take_screenshot!(url, tempfile)
+      case take_screenshot!(url, tempfile)
+      when 1
+        log :info, "Couldn't screenshot referrer: #{url} (#{@site_token})"
+      when 666
+        tag_adult_and_raise
+      end
     end
 
     unless File.size?(tempfile.path)
       url = hostname_for_screenshot
-      raise "Couldn't screenshot hostname #{url} (#{@site_token})!" unless take_screenshot!(url, tempfile)
+      case take_screenshot!(url, tempfile)
+      when 1
+        raise "Couldn't screenshot hostname: #{url} (#{@site_token})"
+      when 666
+        tag_adult_and_raise
+      end
     end
 
     url
@@ -62,6 +72,12 @@ class ScreenshotGrabber
     cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
     log :info, cmd
     system cmd
+  end
+
+  def tag_adult_and_raise
+    site.tags << 'adult'
+    site.save
+    raise "Porn site detected: #{url} (#{@site_token})!"
   end
 
   def site
@@ -76,7 +92,7 @@ class ScreenshotGrabber
     @referrer_for_screenshot ||= begin
       if referrer = Referrer.where(token: @site_token).by_hits.first
         case referrer.url
-        # don't screenshot unaccessible WP page nor local domains
+        # don't screenshot unaccessible WP page nor local domains and huge/common domains
         when *(Site::SKIPPED_DOMAINS.map { |domain| Regexp.new(Regexp.escape(domain)) } + SKIPPED_DOMAINS)
           nil
         else
