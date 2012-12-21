@@ -67,7 +67,6 @@ group :tools do
   gem 'wirble'
   gem 'foreman'
   gem 'brakeman'
-  gem 'heroku'
 
   # Guard
   gem 'ruby_gntp'
