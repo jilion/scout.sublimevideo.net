@@ -1,6 +1,6 @@
 class Site < ActiveRecord::Base
 
-  SKIPPED_DOMAINS = %w[please-edit.me test.com youtube.com youtu.be vimeo.com dailymotion.com google.com dropbox.com]
+  SKIPPED_DOMAINS = %w[please-edit.me test.com facebook.com youtube.com youtu.be vimeo.com dailymotion.com google.com dropbox.com]
 
   acts_as_taggable
 
