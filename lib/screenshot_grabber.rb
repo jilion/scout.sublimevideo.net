@@ -47,7 +47,8 @@ class ScreenshotGrabber
     url = nil
 
     if url = referrer_for_screenshot
-      case take_screenshot!(url, tempfile)
+      take_screenshot!(url, tempfile)
+      case $?
       when 1
         log :info, "Couldn't screenshot referrer: #{url} (#{@site_token})"
       when 666
@@ -57,7 +58,8 @@ class ScreenshotGrabber
 
     unless File.size?(tempfile.path)
       url = hostname_for_screenshot
-      case take_screenshot!(url, tempfile)
+      take_screenshot!(url, tempfile)
+      case $?
       when 1
         raise "Couldn't screenshot hostname: #{url} (#{@site_token})"
       when 666
