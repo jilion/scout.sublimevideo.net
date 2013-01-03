@@ -1,7 +1,7 @@
 # Options here can still be overridden by cmd line args.
 #   sidekiq -C config.yml
 ---
-:verbose: true
+# :verbose: true
 :concurrency: 5
 :queues:
   - [scout, 1]
