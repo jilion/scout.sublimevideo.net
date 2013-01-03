@@ -2,6 +2,6 @@
 #   sidekiq -C config.yml
 ---
 :verbose: true
-:concurrency: 15
+:concurrency: 5
 :queues:
   - [scout, 1]
