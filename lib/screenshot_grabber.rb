@@ -48,6 +48,7 @@ class ScreenshotGrabber
 
     if url = referrer_for_screenshot
       take_screenshot!(url, tempfile)
+
       case $?.exitstatus
       when 1
         log :info, "Couldn't screenshot referrer: #{url} (#{@site_token})"
@@ -59,6 +60,7 @@ class ScreenshotGrabber
     unless File.size?(tempfile.path)
       url = hostname_for_screenshot
       take_screenshot!(url, tempfile)
+
       case $?.exitstatus
       when 1
         raise "Couldn't screenshot hostname: #{url} (#{@site_token})"
@@ -77,9 +79,9 @@ class ScreenshotGrabber
   end
 
   def tag_adult_and_raise
-    site.tags << 'adult'
+    site.tag_list << 'adult'
     site.save
-    raise "Porn site detected: #{url} (#{@site_token})!"
+    raise "Porn site tagged: #{url} (#{@site_token})!"
   end
 
   def site
