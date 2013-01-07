@@ -80,8 +80,8 @@ class ScreenshotGrabber
 
   def tag_adult_and_raise
     site.tag_list << 'adult'
-    site.save
-    raise "Porn site tagged: #{url} (#{@site_token})!"
+    site.save!
+    raise "Porn site tagged: (#{@site_token})!"
   end
 
   def site
