@@ -3,6 +3,7 @@ ScoutSublimevideo::Application.configure do
   config.middleware.insert_after Rack::Lock, "::Rack::Auth::Basic", "Staging" do |u, p|
     [u, p] == ['jilion', ENV['PRIVATE_CODE']]
   end
+  config.use Rack::CookieAuth, cookie_secret: config.secret_token
 
   # Code is not reloaded between requests
   config.cache_classes = true
