@@ -1,6 +1,6 @@
 ScoutSublimevideo::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-  config.use Rack::DeviseCookieAuth,
+  config.middleware.use Rack::DeviseCookieAuth,
     secret: ENV['COOKIE_SECRET'],
     resource: 'admin',
     redirect_to: 'https://admin.sublimevideo.net'

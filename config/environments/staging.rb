@@ -3,7 +3,7 @@ ScoutSublimevideo::Application.configure do
   config.middleware.insert_after Rack::Lock, "::Rack::Auth::Basic", "Staging" do |u, p|
     [u, p] == ['jilion', ENV['PRIVATE_CODE']]
   end
-  config.use Rack::DeviseCookieAuth,
+  config.middleware.use Rack::DeviseCookieAuth,
     secret: ENV['COOKIE_SECRET'],
     resource: 'admin',
     redirect_to: 'https://admin.sublimevideo.net'
