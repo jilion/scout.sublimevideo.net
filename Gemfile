@@ -36,7 +36,7 @@ gem 'sass-rails'
 
 group :staging, :production do
   gem 'thin'
-  gem 'rack-cookie_auth', github: 'jilion/rack-cookie_auth'
+  gem 'rack-devise_cookie_auth'
   gem 'newrelic_rpm'
 end
 

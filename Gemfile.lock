@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/jilion/rack-cookie_auth.git
-  revision: d46d4ba99876561b5e47bde5f52d6beceb354480
-  specs:
-    rack-cookie_auth (0.0.1)
-      activesupport (>= 2.3.2)
-      rack (>= 1.0)
-
-GIT
   remote: git://github.com/jnicklas/carrierwave-mongoid.git
   revision: fb61fb90a9512618ec21e13ad823485933e6293b
   branch: mongoid-3.0
@@ -209,6 +201,9 @@ GEM
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
+    rack-devise_cookie_auth (0.1.0)
+      activesupport (>= 2.3.2)
+      rack (>= 1.0)
     rack-livereload (0.3.10)
       rack
     rack-protection (1.3.2)
@@ -354,7 +349,7 @@ DEPENDENCIES
   pg
   pry-rails
   quiet_assets
-  rack-cookie_auth!
+  rack-devise_cookie_auth
   rack-livereload
   rails (= 3.2.9)
   rb-fsevent
