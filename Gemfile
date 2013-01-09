@@ -4,8 +4,7 @@ ruby '1.9.3'
 
 gem 'bundler'
 
-gem 'rails', '3.2.9'
-gem 'sinatra', require: nil
+gem 'rails', '3.2.11'
 gem 'pg'
 gem 'squeel'
 gem 'mongoid'
@@ -22,9 +21,6 @@ gem 'heroku-api'
 gem 'slim'
 gem 'jquery-rails'
 gem 'acts-as-taggable-on'
-
-# Auth / Admin
-gem 'devise'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -67,7 +63,6 @@ end
 group :tools do
   gem 'wirble'
   gem 'foreman'
-  gem 'brakeman'
 
   # Guard
   gem 'ruby_gntp'

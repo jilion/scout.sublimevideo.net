@@ -1,41 +1,6 @@
 module Spec
   module Support
     module ControllersHelpers
-      shared_examples_for "redirect when connected as" do |url, roles, verb_actions, params = {}|
-        roles = Array.wrap(roles)
-        roles.each do |role|
-          role_name, role_stubs = if role.is_a?(Array)
-            [role[0], role[1]]
-          else
-            [role, {}]
-          end
-          context "a #{role_name}" do
-            verb_actions.each do |verb, actions|
-
-              actions = Array.wrap(actions)
-              actions.each do |action|
-                before do
-                  case role_name.to_sym
-                  when :user
-                    @request.host = "my.test.host"
-                    sign_in(role_name.to_sym, send("authenticated_#{role_name}", role_stubs))
-                  when :admin
-                    @request.host = "admin.test.host"
-                    sign_in(role_name.to_sym, send("authenticated_#{role_name}", role_stubs))
-                  end
-                end
-
-                it "should redirect to #{url} on #{verb.upcase} :#{action}" do
-                  params = params.nil? ? {} : params.reverse_merge({ id: '1' })
-                  send(verb, action, params)
-
-                  response.should redirect_to(url)
-                end
-              end
-            end
-          end
-        end
-      end
 
       def authenticated_admin(stubs = {})
         @authenticated_admin ||= mock_admin(stubs)
