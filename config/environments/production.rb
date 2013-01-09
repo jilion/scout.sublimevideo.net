@@ -1,6 +1,6 @@
 ScoutSublimevideo::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-  config.use Rack::CookieAuth, cookie_secret: config.secret_token
+  config.use Rack::CookieAuth, cookie_secret: '18eff3783028ab6ae8242ede7d4c97ae00e0f4a3eab42deba46802fbc4d03847bb37519978b86e23a7a82e6b8339ac3b34eb9962624859d0d73c2877df09c806'
 
   # Code is not reloaded between requests
   config.cache_classes = true
