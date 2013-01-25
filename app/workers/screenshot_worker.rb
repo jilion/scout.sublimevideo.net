@@ -2,7 +2,7 @@ require 'screenshot_grabber'
 
 class ScreenshotWorker
   include Sidekiq::Worker
-  sidekiq_options queue: :scout
+  sidekiq_options queue: 'scout'
 
   # Takes a screenshot of the site with the given token.
   #

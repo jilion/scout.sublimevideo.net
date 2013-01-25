@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/jilion/autoscaler.git
+  revision: 3a0825c44437908ba4a59876c25ae0b0b4971ace
+  branch: respect_specified_queues
+  specs:
+    autoscaler (0.1.0)
+      heroku-api
+      sidekiq (~> 2.2)
+
+GIT
   remote: git://github.com/jnicklas/carrierwave-mongoid.git
   revision: fb61fb90a9512618ec21e13ad823485933e6293b
   branch: mongoid-3.0
@@ -287,6 +296,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
+  autoscaler!
   bundler
   capybara
   capybara-webkit
@@ -302,7 +312,6 @@ DEPENDENCIES
   foreman
   guard-pow
   guard-rspec
-  heroku-api
   jquery-rails
   mini_magick
   mongoid

@@ -1,6 +1,6 @@
 class ScreenshotsWorker
   include Sidekiq::Worker
-  sidekiq_options queue: :scout
+  sidekiq_options queue: 'scout'
 
   # Delays 'initial' and 'activity' screenshots jobs.
   # @see #take_initial_screenshots
