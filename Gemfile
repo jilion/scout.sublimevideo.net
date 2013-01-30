@@ -15,7 +15,7 @@ gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/pro
 gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
 gem 'mini_magick'
 gem 'sidekiq'
-gem 'autoscaler', github: 'jilion/autoscaler', branch: 'respect_specified_queues'
+gem 'autoscaler'
 
 # Views
 gem 'slim'
