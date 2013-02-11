@@ -4,7 +4,7 @@ ruby '1.9.3'
 
 gem 'bundler'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.12'
 gem 'pg'
 gem 'squeel'
 gem 'mongoid'
@@ -16,6 +16,8 @@ gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mong
 gem 'mini_magick'
 gem 'sidekiq'
 gem 'autoscaler'
+gem 'heroku-api'
+gem 'json'
 
 # Views
 gem 'slim'
