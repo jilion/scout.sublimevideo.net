@@ -73,7 +73,8 @@ class ScreenshotGrabber
   end
 
   def take_screenshot!(url, file)
-    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path}"
+    safe_status = site.tag_list.include?('safe') ? 'safe' : 'not_safe'
+    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path} #{safe_status}"
     log :info, cmd
     system cmd
   end
