@@ -10,9 +10,9 @@ gem 'squeel'
 gem 'mongoid'
 
 # Internals
-gem 'fog',                 '~> 1.6.0'
-gem 'carrierwave',         '~> 0.6.2', require: ['carrierwave', 'carrierwave/processing/mime_types']
-gem 'carrierwave-mongoid', github: 'jnicklas/carrierwave-mongoid', branch: 'mongoid-3.0', require: 'carrierwave/mongoid'
+gem 'fog',                 '~> 1.10'
+gem 'carrierwave',         '~> 0.8', require: ['carrierwave', 'carrierwave/processing/mime_types']
+gem 'carrierwave-mongoid', '~> 0.5', require: 'carrierwave/mongoid'
 gem 'mini_magick'
 gem 'sidekiq'
 gem 'autoscaler'
