@@ -7,12 +7,12 @@ class CarouselController < ApplicationController
   protect_from_forgery except: [:take]
 
   def new_sites_day
-    @sites = Site.active.with_hostname.created_on(@day.all_day)
+    @sites = Site.active.without_hostname(Site::SKIPPED_DOMAINS).created_on(@day).tagged_with('adult', exclude: true).order('created_at desc')
     load_images_from_sites
   end
 
   def new_active_sites_week
-    @sites = Site.active.with_hostname.first_billable_plays_on(@day.all_week)
+    @sites = Site.active.without_hostname(Site::SKIPPED_DOMAINS).first_billable_plays_on_week(@day).tagged_with('adult', exclude: true).by_last_30_days_billable_video_views
     load_images_from_sites
   end
 
