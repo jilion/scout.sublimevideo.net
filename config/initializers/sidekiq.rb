@@ -10,6 +10,11 @@ if ENV['HEROKU_APP']
   end
 
   Sidekiq.configure_server do |config|
+    # if database_url = ENV['DATABASE_URL']
+    #   ENV['DATABASE_URL'] = "#{database_url}?pool=15"
+    #   ActiveRecord::Base.establish_connection
+    # end
+
     config.server_middleware do |chain|
       chain.add Autoscaler::Sidekiq::Server, heroku, 60, %w[scout]
     end
