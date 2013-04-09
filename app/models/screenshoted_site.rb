@@ -3,6 +3,8 @@ class ScreenshotedSite
   include Mongoid::Timestamps
   include ApplicationHelper
 
+  cattr_accessor :sites_infos
+
   MAX_ATTEMPTS = 5
   DELAY = proc { |count| count ** 2 }
 
@@ -28,10 +30,9 @@ class ScreenshotedSite
     #
     # @param [Array<Site>] sites array of Site instances
     def from_sites(sites)
-      @@tokens      = sites.pluck(:token)
-      @@sites_infos = nil
+      @@sites_infos = sites.inject({}) { |hash, s| hash[s.token] = s; hash }
 
-      where(:t.in => @@tokens)
+      where(:t.in => sites.map(&:token))
     end
 
     # Returns the screenshoted sites corresponding to the given Site array
@@ -41,15 +42,10 @@ class ScreenshotedSite
     def from_sites_sorted_by_billable_views(sites)
       from_sites(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
     end
-
-    def sites_info(token)
-      @@sites_infos ||= Site.includes(:tags).where(token: @@tokens).inject({}) { |hash, s| hash[s.token] = s; hash }
-      @@sites_infos[token]
-    end
   end
 
   def site_info
-    @site_info ||= self.class.sites_info(t)
+    @site_info ||= self.class.sites_infos[t]
   end
 
   # This method tells if the latest screenshot of a site is older than the
@@ -71,7 +67,7 @@ class ScreenshotedSite
         hostname: site_info.hostname,
         views: site_info.last_30_days_billable_video_views,
         video_tags: site_info.last_30_days_video_tags,
-        tags: site_info.tag_list.join(', ')
+        tags: site_info.tags.join(', ')
       }
     end
   end

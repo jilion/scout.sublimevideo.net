@@ -6,20 +6,21 @@ Site = Class.new unless defined? Site
 Site::SKIPPED_DOMAINS = %w[please-edit.me youtube.com youtu.be vimeo.com dailymotion.com google.com] unless defined? Site::SKIPPED_DOMAINS
 
 describe ScreenshotGrabber do
-  before do
-    stub_rails
-    stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
-  end
-
   let(:screenshot_grabber) { described_class.new(site_token) }
   let(:site_token)         { 'site_token' }
-  let(:site)               { stub }
+  let(:site)               { stub(safe_status: 'safe') }
   let(:screenshoted_site)  { stub(lfa: nil) }
   let(:referrer_url)       { 'http://google.com' }
   let(:hostname_url)       { 'http://sublimevideo.net' }
   let(:image)              { stub }
   let(:screenshot)         { stub }
   let(:tempfile)           { stub(path: 'tmp/foo.jpg') }
+
+  before do
+    stub_rails
+    stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
+    Site.stub(:find).with('site_token') { site }
+  end
 
   describe '#take!' do
     context 'site is valid for screenshot' do
@@ -66,7 +67,7 @@ describe ScreenshotGrabber do
 
   describe '#take_screenshot!' do
     it 'adds the screenshot to the ScreenshotedSite\'s screenshots collection and save it' do
-      screenshot_grabber.should_receive(:system).with("phantomjs --ignore-ssl-errors=yes #{Rails.root.join('lib', 'phantomjs-scripts', 'rasterize.js').to_s} #{referrer_url} tmp/foo.jpg")
+      screenshot_grabber.should_receive(:system).with("phantomjs --ignore-ssl-errors=yes #{Rails.root.join('lib', 'phantomjs-scripts', 'rasterize.js').to_s} #{referrer_url} tmp/foo.jpg safe")
 
       screenshot_grabber.send(:take_screenshot!, referrer_url, tempfile)
     end
