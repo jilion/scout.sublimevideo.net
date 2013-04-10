@@ -26,7 +26,7 @@ describe ScreenshotedSite do
       described_class.cannot_be_retried(2).entries.should eq [@failed_3_days_ago2]
     end
   end
-  
+
   describe '.with_max_attempts' do
     before do
       ScreenshotedSite::MAX_ATTEMPTS = 5 unless defined? ScreenshotedSite::MAX_ATTEMPTS

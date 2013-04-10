@@ -1,5 +1,4 @@
 #= require jquery
-# require jquery_ujs
 #= require underscore
 #= require jshashtable-2.1
 #= require jquery.numberformatter-1.2.3.min
@@ -50,4 +49,3 @@ window.ScoutSublimeVideo.retakeScreenshot = ->
     url: "/take/#{ScoutSublimeVideo.carousel.currentCell.info.token}"
   ).done (msg) ->
     console.log msg
-

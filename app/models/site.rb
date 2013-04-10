@@ -1,29 +1,38 @@
-class Site < ActiveRecord::Base
+require 'sublime_video_private_api/model'
+
+class Site
+  include SublimeVideoPrivateApi::Model
+  uses_private_api :my
 
   SKIPPED_DOMAINS = %w[please-edit.me test.com facebook.com youtube.com youtu.be vimeo.com dailymotion.com google.com dropbox.com dl.dropbox.com]
 
-  acts_as_taggable
+  def self.all_new_sites_for(timestamp)
+    all(default_params.merge(created_on: timestamp, by_date: 'desc'))
+  end
 
-  scope :active,        lambda { where(state: 'active') }
-  scope :with_hostname, lambda {
-    where { (hostname != nil) & (hostname != '') }.
-    where { hostname << SKIPPED_DOMAINS }
-  }
-  scope :with_min_billable_video_views, lambda { |min|
-    where("(sites.last_30_days_main_video_views + sites.last_30_days_extra_video_views + sites.last_30_days_embed_video_views) >= #{min}")
-  }
-  scope :created_on, lambda { |day|
-    tagged_with('adult', exclude: true).where(created_at: day).order('created_at desc')
-  }
-  scope :first_billable_plays_on, lambda { |day|
-    tagged_with('adult', exclude: true).where(first_billable_plays_at: day).by_last_30_days_billable_video_views
-  }
-  scope :by_last_30_days_billable_video_views, lambda { |way = 'desc'|
-    order("(sites.last_30_days_main_video_views + sites.last_30_days_extra_video_views + sites.last_30_days_embed_video_views) #{way}")
-  }
+  def self.all_new_active_sites_for(timestamp)
+    all(default_params.merge(first_billable_plays_on_week: timestamp, by_last_30_days_billable_video_views: 'desc'))
+  end
+
+  def self.default_params
+    {
+      select: %w[id token hostname last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
+      with_state: 'active', without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
+    }
+  end
 
   def last_30_days_billable_video_views
-    @last_30_days_billable_video_views ||= last_30_days_main_video_views.to_i + last_30_days_extra_video_views.to_i + last_30_days_embed_video_views.to_i
+    @last_30_days_billable_video_views ||= begin
+      last_30_days_main_video_views.to_i + last_30_days_extra_video_views.to_i + last_30_days_embed_video_views.to_i
+    end
+  end
+
+  def safe_status
+    tags.include?('safe') ? 'safe' : 'not_safe'
+  end
+
+  def add_tag(tag)
+    self.class.put(:add_tag, id: token, tag: tag)
   end
 
 end

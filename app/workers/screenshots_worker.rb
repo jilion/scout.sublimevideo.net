@@ -3,8 +3,10 @@ class ScreenshotsWorker
   sidekiq_options queue: 'scout'
 
   # Delays 'initial' and 'activity' screenshots jobs.
+  #
   # @see #take_initial_screenshots
   # @see #take_activity_screenshots
+  #
   def perform
     take_initial_screenshots
     take_activity_screenshots
@@ -12,9 +14,10 @@ class ScreenshotsWorker
 
   # Delays screenshot jobs for sites that don't have any
   # screenshot yet.
+  #
   def take_initial_screenshots
-    tokens_to_initially_screenshot do |token|
-      ScreenshotWorker.perform_async(token)
+    _sites_to_initially_screenshot.each do |site|
+      ScreenshotWorker.perform_async(site.token)
     end
   end
 
@@ -22,46 +25,51 @@ class ScreenshotsWorker
   # threshold of video plays and for which the latest screenshot is older
   # than a given days interval.
   #
-  # @see #take_initial_screenshots
   def take_activity_screenshots
-    tokens_to_activity_screenshot do |token|
-      ScreenshotWorker.perform_async(token)
+    _sites_to_activity_screenshot.each do |site|
+      ScreenshotWorker.perform_async(site.token)
     end
   end
 
   private
 
-  # Yields the tokens of sites that are eligible for an 'initial' screenshot.
+  # Returns the tokens of sites that are eligible for an 'initial' screenshot.
   #
-  # @param [Symbol, String] group_iterator A group iterator method name to
-  #  iterate over the sites by batch. Useful for testing.
   # @see #take_initial_screenshots
-  def tokens_to_initially_screenshot(group_iterator = :find_in_batches)
-    tokens_to_not_screenshot = ScreenshotedSite.where(lfa: nil).map(&:t)
-    (1...ScreenshotedSite::MAX_ATTEMPTS).each do |n|
-      tokens_to_not_screenshot += ScreenshotedSite.cannot_be_retried(n).map(&:t)
-    end
-    tokens_to_not_screenshot += ScreenshotedSite.with_max_attempts.map(&:t)
-    Site.active.with_hostname.send(group_iterator) do |sites_group|
-      (sites_group.map(&:token) - tokens_to_not_screenshot).each { |token| yield token }
-    end
+  #
+  def _sites_to_initially_screenshot
+    Site.all(select: %w[token], with_state: 'active', without_tokens: _tokens_to_not_screenshot)
   end
 
-  # Yields the tokens of sites that are eligible for an 'activity' screenshot.
+  # Returns the tokens of sites that are eligible for an 'activity' screenshot.
   #
-  # @param [Symbol, String] group_iterator A group iterator method name to
-  #  iterate over the sites by batch. Useful for testing.
   # @param [Hash] opts
   # @option opts [Fixnum] plays_threshold Threshold of video plays that
   #  a site must have in order to be screenshoted.
   # @option opts [Fixnum] days_interval Days interval between two
   #  screenshots.
-  # @see #take_initial_screenshots
-  def tokens_to_activity_screenshot(group_iterator = :find_in_batches, opts = { plays_threshold: 10, days_interval: 5.days.ago })
-    Site.active.with_hostname.with_min_billable_video_views(opts[:plays_threshold]).send(group_iterator) do |sites_group|
-      ScreenshotedSite.where(t: sites_group.map(&:token)).each do |screenshoted_site|
-        yield(screenshoted_site.t) if screenshoted_site.latest_screenshot_older_than(opts[:days_interval])
+  #
+  # @see #take_activity_screenshots
+  #
+  def _sites_to_activity_screenshot(opts = { plays_threshold: 10, days_interval: 5.days.ago })
+    Site.all(select: %w[token], with_state: 'active', with_min_billable_video_views: opts[:plays_threshold]).select do |site|
+      ScreenshotedSite.find_by_token(site.token).latest_screenshot_older_than(opts[:days_interval])
+    end
+  end
+
+  # Returns the token to not screenshot either because:
+  # - the screenshoted site has never had a failed screenshot attempt
+  # - the screenshoted site has at least 1 failed attempt and cannot be retried
+  #   yet (see logic in ScreenshotedSite)
+  # - the screenshoted site has reached the max screenshots attempts
+  #
+  def _tokens_to_not_screenshot
+    @tokens_to_not_screenshot ||= begin
+      tokens = ScreenshotedSite.where(lfa: nil).map(&:t)
+      (1...ScreenshotedSite::MAX_ATTEMPTS).each do |n|
+        tokens += ScreenshotedSite.cannot_be_retried(n).map(&:t)
       end
+      tokens += ScreenshotedSite.with_max_attempts.map(&:t)
     end
   end
 

@@ -7,8 +7,11 @@ require File.expand_path('app/workers/screenshots_worker')
 describe ScreenshotsWorker do
   stub_class 'Site', 'ScreenshotedSite', 'ScreenshotWorker'
 
-  let(:worker)     { described_class.new }
-  let(:site_token) { 'site_token' }
+  let(:worker)      { described_class.new }
+  let(:site_token1) { 'site_token1' }
+  let(:site_token2) { 'site_token1' }
+  let(:site1) { stub(token: site_token1) }
+  let(:site2) { stub(token: site_token2) }
 
   describe '#perform' do
     it 'calls #take_initial_screenshots, #take_activity_screenshots and #delay_itself' do
@@ -21,20 +24,22 @@ describe ScreenshotsWorker do
 
   describe '#take_initial_screenshots' do
     it 'enqueues a screenshot job for site without screenshot yet' do
-      ScreenshotWorker.should_receive(:perform_async).with(site_token)
+      ScreenshotWorker.should_receive(:perform_async).with(site_token1)
+      ScreenshotWorker.should_receive(:perform_async).with(site_token2)
 
-      worker.stub(:tokens_to_initially_screenshot) { |&block| block.call(site_token) }
+      worker.stub(:_sites_to_initially_screenshot) { [site1, site2] }
       worker.take_initial_screenshots
     end
   end
 
   describe '#take_activity_screenshots' do
-    let(:tokens_to_activity_screenshot) { [site_token] }
+    let(:tokens_to_activity_screenshot) { [site_token1] }
 
     it 'enqueues a screenshot job for site without screenshot yet' do
-      ScreenshotWorker.should_receive(:perform_async).with(site_token)
+      ScreenshotWorker.should_receive(:perform_async).with(site_token1)
+      ScreenshotWorker.should_receive(:perform_async).with(site_token2)
 
-      worker.stub(:tokens_to_activity_screenshot) { |&block| block.call(site_token) }
+      worker.stub(:_sites_to_activity_screenshot) { [site1, site2] }
       worker.take_activity_screenshots
     end
   end
@@ -42,59 +47,29 @@ describe ScreenshotsWorker do
   # ===================
   # = Private methods =
   # ===================
-  describe '#tokens_to_initially_screenshot' do
-    let(:screenshoted_sites1) { [stub(t: 'abc')] }
-    let(:screenshoted_sites2) { [stub(t: 'cba')] }
-    let(:screenshoted_sites3) { [stub(t: 'def')] }
-    let(:active_sites)       { [[stub(token: site_token), stub(token: 'abc'), stub(token: 'cba'), stub(token: 'def'), stub(token: '123')]] }
+  describe '#_sites_to_initially_screenshot' do
+    let(:tokens_to_not_screenshot) { ['abc', 'cba', 'def'] }
     before do
-      ScreenshotedSite::MAX_ATTEMPTS = 5 unless defined? ScreenshotedSite::MAX_ATTEMPTS
-      ScreenshotedSite.should_receive(:where)                              { screenshoted_sites1 }
-      ScreenshotedSite.should_receive(:cannot_be_retried).exactly(4).times { screenshoted_sites2 }
-      ScreenshotedSite.should_receive(:with_max_attempts)                  { screenshoted_sites3 }
-      Site.stub_chain(:active, :with_hostname)                             { active_sites }
+      worker.should_receive(:_tokens_to_not_screenshot) { tokens_to_not_screenshot }
+      Site.should_receive(:all).with(select: %w[token], with_state: 'active', without_tokens: tokens_to_not_screenshot) { [site1, site2] }
     end
 
-    it 'yields 2 tokens' do
-      sum = 0
-      worker.send(:tokens_to_initially_screenshot, :each) do |token|
-        token.should_not eq 'abc'
-        sum += 1
-      end
-      sum.should eq 2
+    it 'returns 2 sites' do
+      worker.send(:_sites_to_initially_screenshot).should eq [site1, site2]
     end
   end
 
-  describe '#tokens_to_activity_screenshot' do
-    let(:screenshoted_site_non_eligible) { stub(t: '123abc', latest_screenshot_older_than: false) }
-    let(:screenshoted_site_eligible1)    { stub(t: 'abc123', latest_screenshot_older_than: true) }
-    let(:screenshoted_site_eligible2)    { stub(t: 'abc456', latest_screenshot_older_than: true) }
-    let(:screenshoted_sites) do
-      [
-        screenshoted_site_non_eligible,
-        screenshoted_site_eligible1,
-        screenshoted_site_eligible2
-      ]
-    end
-    let(:sites_with_activity) do
-      [[
-        stub(token: screenshoted_site_non_eligible.t),
-        stub(token: screenshoted_site_eligible1.t),
-        stub(token: screenshoted_site_eligible2.t)
-      ]]
-    end
+  describe '#_sites_to_activity_screenshot' do
+    let(:screenshoted_site1) { stub(t: site_token1, latest_screenshot_older_than: false) }
+    let(:screenshoted_site2) { stub(t: site_token2, latest_screenshot_older_than: true) }
     before do
-      ScreenshotedSite.should_receive(:where).with(t: screenshoted_sites.map(&:t)) { screenshoted_sites }
-      Site.stub_chain(:active, :with_hostname, :with_min_billable_video_views)     { sites_with_activity }
+      ScreenshotedSite.should_receive(:find_by_token).with(site_token1) { screenshoted_site1 }
+      ScreenshotedSite.should_receive(:find_by_token).with(site_token2) { screenshoted_site2 }
+      Site.should_receive(:all).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10) { [site1, site2] }
     end
 
-    it 'yields 2 tokens' do
-      sum = 0
-      worker.send(:tokens_to_activity_screenshot, :each, { plays_threshold: 10, days_interval: 5 }) do |token|
-        token.should_not eq screenshoted_site_non_eligible.t
-        sum += 1
-      end
-      sum.should eq 2
+    it 'returns 2 sites' do
+      worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should eq [site2]
     end
   end
 end

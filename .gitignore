@@ -20,3 +20,5 @@ uploads
 .tddium*
 *.sublime-project
 !.sublime-project
+
+.rvmrc
