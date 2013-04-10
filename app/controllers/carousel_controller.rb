@@ -7,13 +7,11 @@ class CarouselController < ApplicationController
   protect_from_forgery except: [:take]
 
   def new_sites_day
-    @sites = Site.active.with_hostname.created_on(@day.all_day)
-    load_images_from_sites
+    load_images(Site.all_new_sites_for(@day))
   end
 
   def new_active_sites_week
-    @sites = Site.active.with_hostname.first_billable_plays_on(@day.all_week)
-    load_images_from_sites
+    load_images(Site.all_new_active_sites_for(@day))
   end
 
   def take
@@ -31,8 +29,8 @@ class CarouselController < ApplicationController
     redirect_to new_active_sites_week_url(l(@day.beginning_of_week, format: :Y_m_d)) unless @day == @day.beginning_of_week
   end
 
-  def load_images_from_sites
-    @images = ScreenshotedSite.from_sites_sorted_by_billable_views(@sites).map(&:prepare_for_carousel).compact.to_json
+  def load_images(sites)
+    @images = ScreenshotedSite.from_sites_sorted_by_billable_views(sites).map(&:prepare_for_carousel).compact.to_json
   end
 
 end

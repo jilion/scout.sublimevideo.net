@@ -44,49 +44,66 @@ class ScreenshotGrabber
   end
 
   def screenshot_referrer_or_hostname(tempfile)
-    url = nil
+    url = screenshot_referrer(tempfile)
+    url = screenshot_hostname!(tempfile) unless File.size?(tempfile.path)
 
+    url
+  end
+
+  def screenshot_referrer(tempfile)
     if url = referrer_for_screenshot
-      take_screenshot!(url, tempfile)
-
-      case $?.exitstatus
-      when 1
-        log :info, "Couldn't screenshot referrer: #{url} (#{@site_token})"
-      when 2
-        tag_adult_and_raise
+      unless take_screenshot!(url, tempfile)
+        handle_screenshot_process_exit_status($?.exitstatus) if $?
       end
+
+      url
     end
+  end
 
-    unless File.size?(tempfile.path)
-      url = hostname_for_screenshot
-      take_screenshot!(url, tempfile)
-
-      case $?.exitstatus
-      when 1
-        raise "Couldn't screenshot hostname: #{url} (#{@site_token})"
-      when 2
-        tag_adult_and_raise
-      end
+  def screenshot_hostname!(tempfile)
+    url = hostname_for_screenshot
+    unless take_screenshot!(url, tempfile)
+      handle_screenshot_process_exit_status!($?.exitstatus) if $?
     end
 
     url
   end
 
   def take_screenshot!(url, file)
-    safe_status = site.tag_list.include?('safe') ? 'safe' : 'not_safe'
-    cmd = "phantomjs --ignore-ssl-errors=yes #{File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)} #{url} #{file.path} #{safe_status}"
+    cmd = %w[phantomjs --ignore-ssl-errors=yes]
+    cmd << File.expand_path('../phantomjs-scripts/rasterize.js', __FILE__)
+    cmd << url << file.path << site.safe_status
+    cmd = cmd.join(' ')
+
     log :info, cmd
     system cmd
   end
 
+  def handle_screenshot_process_exit_status(exit_status, options = { raise: false })
+    case exit_status
+    when 1
+      msg = "Couldn't screenshot: #{url} (#{@site_token})"
+      if options[:raise]
+        raise msg
+      else
+        log :info, msg
+      end
+    when 2
+      tag_adult_and_raise
+    end
+  end
+
+  def handle_screenshot_process_exit_status!(exit_status)
+    handle_screenshot_process_exit_status(exit_status, raise: true)
+  end
+
   def tag_adult_and_raise
-    site.tag_list << 'adult'
-    site.save!
+    site.add_tag('adult')
     raise "Porn site tagged: (#{@site_token})!"
   end
 
   def site
-    @site ||= Site.with_hostname.find_by_token(@site_token)
+    @site ||= Site.find(@site_token)
   end
 
   def screenshoted_site
@@ -112,11 +129,15 @@ class ScreenshotGrabber
   end
 
   def logger
-    @logger ||= @options[:external_log] ? Logger.new(File.expand_path('../../log/screenshot_grabber.log', __FILE__)) : Rails.logger
+    @logger ||= if @options[:external_log]
+      Logger.new(File.expand_path('../../log/screenshot_grabber.log', __FILE__))
+    else
+      Rails.logger if Rails.respond_to?(:logger)
+    end
   end
 
   def log(level, message)
-    if level == :error || @options[:debug]
+    if logger && (level == :error || @options[:debug])
       logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
     end
   end

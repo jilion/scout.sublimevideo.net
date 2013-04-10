@@ -6,28 +6,6 @@ def stub_class(*args)
   args.each { |mod| stub_module_or_class(mod, Class) }
 end
 
-def stub_rails
-  unless defined?(Rails)
-    Object.class_eval <<-END
-    module Rails
-      def self.root; Pathname.new(File.expand_path('')); end
-      def self.public_path; Pathname.new(File.expand_path('/public')); end
-      def self.env; 'test'; end
-      def self.logger
-        o = OpenStruct.new
-        def o.info(*args)
-          # puts args
-        end
-        def o.error(*args)
-          # puts args
-        end
-        o
-      end
-    end
-    END
-  end
-end
-
 def stub_module_or_class(full_name, kind, &block)
   full_name.to_s.split(/::/).inject(Object) do |context, name|
     begin

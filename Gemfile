@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
+source 'https://8dezqz7z7HWea9vtaFwg@gem.fury.io/me/' # thibaud@jilion.com account
 
-ruby '1.9.3'
+ruby '2.0.0'
 
 gem 'bundler'
 
 gem 'rails', '3.2.13'
-gem 'pg'
-gem 'squeel'
+gem 'sublime_video_private_api', '~> 1.0' # hosted on gemfury
 gem 'mongoid'
 
 # Internals
@@ -17,45 +17,43 @@ gem 'mini_magick'
 gem 'sidekiq'
 gem 'autoscaler'
 gem 'heroku-api'
-gem 'json'
+gem 'oj'
 
 # Views
 gem 'slim'
 gem 'jquery-rails'
-gem 'acts-as-taggable-on'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'coffee-rails'
-  gem 'closure-compiler'
+  gem 'uglifier'
 end
 gem 'sass-rails'
 
 group :staging, :production do
-  gem 'thin'
+  gem 'unicorn'
   gem 'rack-devise_cookie_auth'
   gem 'newrelic_rpm'
 end
 
 group :development do
   gem 'rack-livereload'
-  gem 'silent-postgres'
   gem 'quiet_assets'
   gem 'pry-rails'
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.11.0'
+  gem 'rspec-rails'
   gem 'debugger'
 end
 
 group :test do
   gem 'shoulda-matchers'
-  gem 'capybara'
-  gem 'capybara-webkit'
-  gem 'webmock',  '~> 1.8'
-  gem 'typhoeus', '~> 0.2'
+  # gem 'capybara'
+  # gem 'capybara-webkit'
+  # gem 'webmock'
+  # gem 'typhoeus'
 
   gem 'database_cleaner'
   gem 'factory_girl'

@@ -34,7 +34,7 @@ class ScoutSublimeVideo.Carousel
       this.goTo(0)
       this.startSlideshow(@options['autoNextInterval'] * 2) if @options['slideshow'] and @options['images'].length >= 2
     else
-      console.log 'No images at initialization'
+      console.warn 'No images at initialization'
 
     this.setupKeyboardObservers()
 
@@ -249,7 +249,6 @@ class ScoutSublimeVideo.Carousel
       else
         @lastX = event.touches[0].pageX
         dx     = @lastX - @startX
-        console.log dx
         @keys['left']  = dx > 0 and dx > 20
         @keys['right'] = dx < 0 and dx < -20
         this.keyCheck()
