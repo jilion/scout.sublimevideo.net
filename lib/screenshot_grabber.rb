@@ -98,7 +98,7 @@ class ScreenshotGrabber
   end
 
   def tag_adult_and_raise
-    Site.put(:add_tag, id: site.token, tag: 'adult')
+    site.add_tag('adult')
     raise "Porn site tagged: (#{@site_token})!"
   end
 

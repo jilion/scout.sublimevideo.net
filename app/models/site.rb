@@ -16,18 +16,23 @@ class Site
 
   def self.default_params
     {
-      includes: 'tags',
       select: %w[id token hostname last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
       with_state: 'active', without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
     }
   end
 
   def last_30_days_billable_video_views
-    @last_30_days_billable_video_views ||= last_30_days_main_video_views.to_i + last_30_days_extra_video_views.to_i + last_30_days_embed_video_views.to_i
+    @last_30_days_billable_video_views ||= begin
+      last_30_days_main_video_views.to_i + last_30_days_extra_video_views.to_i + last_30_days_embed_video_views.to_i
+    end
   end
 
   def safe_status
     tags.include?('safe') ? 'safe' : 'not_safe'
+  end
+
+  def add_tag(tag)
+    self.class.put(:add_tag, id: token, tag: tag)
   end
 
 end
