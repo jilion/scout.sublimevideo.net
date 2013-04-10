@@ -50,10 +50,6 @@ end
 
 group :test do
   gem 'shoulda-matchers'
-  # gem 'capybara'
-  # gem 'capybara-webkit'
-  # gem 'webmock'
-  # gem 'typhoeus'
 
   gem 'database_cleaner'
   gem 'factory_girl'

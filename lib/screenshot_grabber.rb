@@ -1,8 +1,6 @@
 require 'tempfile'
-require 'action_view/helpers/number_helper'
 
 class ScreenshotGrabber
-  include ActionView::Helpers::NumberHelper
 
   SKIPPED_DOMAINS = [
     /localhost/, /127\.0\.0\.1/,
