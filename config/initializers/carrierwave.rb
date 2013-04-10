@@ -18,7 +18,7 @@ module CarrierWave
     def file_configuration
       configure do |config|
         config.storage           = :file
-        config.enable_processing = false
+        config.enable_processing = true
       end
     end
   end

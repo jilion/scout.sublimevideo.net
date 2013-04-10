@@ -17,7 +17,6 @@ describe ScreenshotGrabber do
   let(:tempfile)           { stub(path: 'tmp/foo.jpg') }
 
   before do
-    stub_rails
     stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
     Site.stub(:find).with('site_token') { site }
   end

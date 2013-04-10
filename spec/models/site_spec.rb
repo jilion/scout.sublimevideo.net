@@ -1,12 +1,10 @@
 require 'fast_spec_helper'
-require 'active_support/core_ext'
-require 'sublime_video_private_api/model'
 require 'support/private_api_helpers'
 
 require 'models/site'
 
 describe Site do
-  let(:day) { Time.utc(2013,4,9) }
+  let(:day)   { Time.utc(2013,4,9) }
   let!(:site) { Site.new(hostname: 'baz.com', created_at: Time.utc(2013,4,9)) }
 
   before do

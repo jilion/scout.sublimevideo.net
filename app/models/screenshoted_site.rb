@@ -22,7 +22,9 @@ class ScreenshotedSite
 
   validates :t, presence: true, uniqueness: true
 
-  scope :cannot_be_retried, ->(attempts) { where(fac: attempts).where(:lfa.gte => ScreenshotedSite::DELAY.call(attempts).days.ago) }
+  scope :cannot_be_retried, ->(attempts) {
+    where(fac: attempts).where(:lfa.gte => ScreenshotedSite::DELAY.call(attempts).days.ago)
+  }
   scope :with_max_attempts, -> { where(:fac.gte => ScreenshotedSite::MAX_ATTEMPTS) }
 
   class << self

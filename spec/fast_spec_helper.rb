@@ -24,4 +24,3 @@ end
 require 'bundler/setup'
 require_relative 'config/rspec'
 require_relative 'support/stubs'
-require_relative 'support/fixtures_helpers'
