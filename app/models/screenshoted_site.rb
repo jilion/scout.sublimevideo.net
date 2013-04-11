@@ -57,7 +57,7 @@ class ScreenshotedSite
   #
   # @return [Boolean]
   def latest_screenshot_older_than(days_count)
-    screenshots.latest.created_at < days_count.days.ago
+    screenshots.latest.created_at < (days_count.days.ago)
   end
 
   def prepare_for_carousel
