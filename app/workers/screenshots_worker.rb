@@ -38,7 +38,12 @@ class ScreenshotsWorker
   # @see #take_initial_screenshots
   #
   def _sites_to_initially_screenshot
-    Site.all(select: %w[token], with_state: 'active', without_tokens: _tokens_to_not_screenshot)
+    sites = []
+    Site.find_each(select: %w[token], with_state: 'active') do |site|
+      sites << site unless _tokens_to_not_screenshot.include?(site.token)
+    end
+
+    sites
   end
 
   # Returns the tokens of sites that are eligible for an 'activity' screenshot.
@@ -52,9 +57,12 @@ class ScreenshotsWorker
   # @see #take_activity_screenshots
   #
   def _sites_to_activity_screenshot(opts = { plays_threshold: 10, days_interval: 5.days.ago })
-    Site.all(select: %w[token], with_state: 'active', with_min_billable_video_views: opts[:plays_threshold]).select do |site|
-      ScreenshotedSite.find_by_token(site.token).latest_screenshot_older_than(opts[:days_interval])
+    sites = []
+    Site.find_each(select: %w[token], with_state: 'active', with_min_billable_video_views: opts[:plays_threshold]) do |site|
+      sites << site if ScreenshotedSite.find_by_token(site.token).latest_screenshot_older_than(opts[:days_interval])
     end
+
+    sites
   end
 
   # Returns the token to not screenshot either because:

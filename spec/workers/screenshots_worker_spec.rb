@@ -51,25 +51,53 @@ describe ScreenshotsWorker do
     let(:tokens_to_not_screenshot) { ['abc', 'cba', 'def'] }
     before do
       worker.should_receive(:_tokens_to_not_screenshot) { tokens_to_not_screenshot }
-      Site.should_receive(:all).with(select: %w[token], with_state: 'active', without_tokens: tokens_to_not_screenshot) { [site1, site2] }
     end
 
-    it 'returns 2 sites' do
-      worker.send(:_sites_to_initially_screenshot).should eq [site1, site2]
+    context 'site has already been screenshoted' do
+      before do
+        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active').and_yield(stub(token: 'abc'))
+      end
+
+      it 'returns an empty array' do
+        worker.send(:_sites_to_initially_screenshot).should be_empty
+      end
+    end
+
+    context 'site has never been screenshoted' do
+      before do
+        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active').and_yield(site1)
+      end
+
+      it 'returns 1 site' do
+        worker.send(:_sites_to_initially_screenshot).should eq [site1]
+      end
     end
   end
 
   describe '#_sites_to_activity_screenshot' do
     let(:screenshoted_site1) { stub(t: site_token1, latest_screenshot_older_than: false) }
     let(:screenshoted_site2) { stub(t: site_token2, latest_screenshot_older_than: true) }
-    before do
-      ScreenshotedSite.should_receive(:find_by_token).with(site_token1) { screenshoted_site1 }
-      ScreenshotedSite.should_receive(:find_by_token).with(site_token2) { screenshoted_site2 }
-      Site.should_receive(:all).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10) { [site1, site2] }
+
+    context 'site with last screenshot not older enough' do
+      before do
+        ScreenshotedSite.should_receive(:find_by_token).with(site_token1) { screenshoted_site1 }
+        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site1)
+      end
+
+      it 'returns an empty array' do
+        worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should be_empty
+      end
     end
 
-    it 'returns 2 sites' do
-      worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should eq [site2]
+    context 'site with last screenshot older enough' do
+      before do
+        ScreenshotedSite.should_receive(:find_by_token).with(site_token2) { screenshoted_site2 }
+        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site2)
+      end
+
+      it 'returns 1 site' do
+        worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should eq [site2]
+      end
     end
   end
 end
