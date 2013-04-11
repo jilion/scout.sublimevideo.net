@@ -7,11 +7,11 @@ class Site
   SKIPPED_DOMAINS = %w[please-edit.me test.com facebook.com youtube.com youtu.be vimeo.com dailymotion.com google.com dropbox.com dl.dropbox.com]
 
   def self.all_new_sites_for(timestamp)
-    all(default_params.merge(created_on: timestamp, by_date: 'desc'))
+    all(default_params.merge(created_on: timestamp, by_date: 'desc', per: 1000))
   end
 
   def self.all_new_active_sites_for(timestamp)
-    all(default_params.merge(first_billable_plays_on_week: timestamp, by_last_30_days_billable_video_views: 'desc'))
+    all(default_params.merge(first_billable_plays_on_week: timestamp, by_last_30_days_billable_video_views: 'desc', per: 1000))
   end
 
   def self.default_params

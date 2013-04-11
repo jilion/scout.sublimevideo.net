@@ -56,7 +56,9 @@ class ScreenshotsWorker
   #
   # @see #take_activity_screenshots
   #
-  def _sites_to_activity_screenshot(opts = { plays_threshold: 10, days_interval: 5.days.ago })
+  def _sites_to_activity_screenshot(options = {})
+    { plays_threshold: 10, days_interval: 5.days.ago }.merge!(options)
+
     sites = []
     Site.find_each(select: %w[token], with_state: 'active', with_min_billable_video_views: opts[:plays_threshold]) do |site|
       sites << site if ScreenshotedSite.where(t: site.token).first.latest_screenshot_older_than(opts[:days_interval])
