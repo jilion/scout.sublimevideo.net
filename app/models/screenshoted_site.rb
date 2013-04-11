@@ -11,6 +11,7 @@ class ScreenshotedSite
   field :t,   type: String
   field :lfa, type: DateTime # last failed at => used for not retrying to take a screenshot everytime
   field :fac, type: Integer, default: 0 # failed attempts count
+  index({ t: 1 }, { unique: true })
 
   embeds_many :screenshots, cascade_callbacks: true, store_as: 's' do
     def latest
@@ -18,32 +19,31 @@ class ScreenshotedSite
     end
   end
 
-  index({ t: 1 }, { unique: true })
-
   validates :t, presence: true, uniqueness: true
 
-  scope :cannot_be_retried, ->(attempts) {
+  def self.cannot_be_retried(attempts)
     where(fac: attempts).where(:lfa.gte => ScreenshotedSite::DELAY.call(attempts).days.ago)
-  }
-  scope :with_max_attempts, -> { where(:fac.gte => ScreenshotedSite::MAX_ATTEMPTS) }
+  end
 
-  class << self
-    # Returns the screenshoted sites corresponding to the given Site array
-    #
-    # @param [Array<Site>] sites array of Site instances
-    def from_sites(sites)
-      @@sites_infos = sites.inject({}) { |hash, s| hash[s.token] = s; hash }
+  def self.with_max_attempts
+    where(:fac.gte => ScreenshotedSite::MAX_ATTEMPTS)
+  end
 
-      where(:t.in => sites.map(&:token))
-    end
+  # Returns the screenshoted sites corresponding to the given Site array
+  #
+  # @param [Array<Site>] sites array of Site instances
+  def self.from_sites(sites)
+    @@sites_infos = sites.inject({}) { |hash, s| hash[s.token] = s; hash }
 
-    # Returns the screenshoted sites corresponding to the given Site array
-    # sorted by last_30_days_billable_video_views DESC
-    #
-    # @param [Array<Site>] sites array of Site instances
-    def from_sites_sorted_by_billable_views(sites)
-      from_sites(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
-    end
+    where(:t.in => sites.map(&:token))
+  end
+
+  # Returns the screenshoted sites corresponding to the given Site array
+  # sorted by last_30_days_billable_video_views DESC
+  #
+  # @param [Array<Site>] sites array of Site instances
+  def self.from_sites_sorted_by_billable_views(sites)
+    from_sites(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
   end
 
   def site_info
