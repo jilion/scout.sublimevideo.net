@@ -8,8 +8,8 @@ class ScreenshotsWorker
   # @see #take_activity_screenshots
   #
   def perform
-    self.class.delay.take_initial_screenshots
-    self.class.delay.take_activity_screenshots
+    self.class.delay(queue: 'scout').take_initial_screenshots
+    self.class.delay(queue: 'scout').take_activity_screenshots
   end
 
   # Delays screenshot jobs for sites that don't have any
