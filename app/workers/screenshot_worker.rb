@@ -8,7 +8,6 @@ class ScreenshotWorker
   #
   # @param [String] token The token of the site to sreenshot.
   def perform(token)
-    # Don't allow more than 2 minutes!
     ScreenshotGrabber.new(token).take!
   end
 end

@@ -18,4 +18,5 @@ describe ScreenshotWorker do
       worker.perform(site_token)
     end
   end
+
 end

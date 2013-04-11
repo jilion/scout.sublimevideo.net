@@ -5,22 +5,21 @@ require 'sidekiq/testing'
 require File.expand_path('app/workers/screenshots_worker')
 
 describe ScreenshotsWorker do
-  stub_class 'Site', 'ScreenshotedSite', 'ScreenshotWorker'
+  stub_class 'Site', 'Screenshoter'
 
   let(:worker)      { described_class.new }
   let(:site_token1) { 'site_token1' }
   let(:site_token2) { 'site_token1' }
-  let(:site1) { stub(token: site_token1) }
-  let(:site2) { stub(token: site_token2) }
+  let(:site1)       { stub(token: site_token1) }
+  let(:site2)       { stub(token: site_token2) }
+  let(:delay_stub)  { stub('delay') }
 
   describe '#perform' do
     it 'calls #take_initial_screenshots, #take_activity_screenshots and #delay_itself' do
-      delay_stub1 = stub('delay1')
-      delay_stub2 = stub('delay2')
-      described_class.should_receive(:delay) { delay_stub1 }
-      delay_stub1.should_receive(:take_initial_screenshots)
-      described_class.should_receive(:delay) { delay_stub2 }
-      delay_stub2.should_receive(:take_activity_screenshots)
+      described_class.should_receive(:delay) { delay_stub }
+      delay_stub.should_receive(:take_initial_screenshots)
+      described_class.should_receive(:delay) { delay_stub }
+      delay_stub.should_receive(:take_activity_screenshots)
 
       worker.perform
     end
@@ -28,10 +27,11 @@ describe ScreenshotsWorker do
 
   describe '#take_initial_screenshots' do
     it 'enqueues a screenshot job for site without screenshot yet' do
-      ScreenshotWorker.should_receive(:perform_async).with(site_token1)
-      ScreenshotWorker.should_receive(:perform_async).with(site_token2)
+      worker.should_receive(:_seven_days_ago) { Time.utc(2013,4,4) }
+      Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', created_after: Time.utc(2013,4,4)).and_yield(site1)
+      Screenshoter.should_receive(:delay).with(queue: 'scout') { delay_stub }
+      delay_stub.should_receive(:take).with(site_token1, 'initial')
 
-      worker.stub(:_sites_to_initially_screenshot) { [site1, site2] }
       worker.take_initial_screenshots
     end
   end
@@ -40,68 +40,12 @@ describe ScreenshotsWorker do
     let(:tokens_to_activity_screenshot) { [site_token1] }
 
     it 'enqueues a screenshot job for site without screenshot yet' do
-      ScreenshotWorker.should_receive(:perform_async).with(site_token1)
-      ScreenshotWorker.should_receive(:perform_async).with(site_token2)
+      Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site1)
+      Screenshoter.should_receive(:delay).with(queue: 'scout') { delay_stub }
+      delay_stub.should_receive(:take).with(site_token1, 'activity')
 
-      worker.stub(:_sites_to_activity_screenshot) { [site1, site2] }
       worker.take_activity_screenshots
     end
   end
 
-  # ===================
-  # = Private methods =
-  # ===================
-  describe '#_sites_to_initially_screenshot' do
-    let(:tokens_to_not_screenshot) { ['abc', 'cba', 'def'] }
-    before do
-      worker.should_receive(:_tokens_to_not_screenshot) { tokens_to_not_screenshot }
-    end
-
-    context 'site has already been screenshoted' do
-      before do
-        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active').and_yield(stub(token: 'abc'))
-      end
-
-      it 'returns an empty array' do
-        worker.send(:_sites_to_initially_screenshot).should be_empty
-      end
-    end
-
-    context 'site has never been screenshoted' do
-      before do
-        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active').and_yield(site1)
-      end
-
-      it 'returns 1 site' do
-        worker.send(:_sites_to_initially_screenshot).should eq [site1]
-      end
-    end
-  end
-
-  describe '#_sites_to_activity_screenshot' do
-    let(:screenshoted_site1) { stub(t: site_token1, latest_screenshot_older_than: false) }
-    let(:screenshoted_site2) { stub(t: site_token2, latest_screenshot_older_than: true) }
-
-    context 'site with last screenshot not older enough' do
-      before do
-        ScreenshotedSite.stub_chain(:where, :first) { screenshoted_site1 }
-        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site1)
-      end
-
-      it 'returns an empty array' do
-        worker.send(:_sites_to_activity_screenshot).should be_empty
-      end
-    end
-
-    context 'site with last screenshot older enough' do
-      before do
-        ScreenshotedSite.stub_chain(:where, :first) { screenshoted_site2 }
-        Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site2)
-      end
-
-      it 'returns 1 site' do
-        worker.send(:_sites_to_activity_screenshot).should eq [site2]
-      end
-    end
-  end
 end
