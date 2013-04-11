@@ -80,7 +80,7 @@ describe ScreenshotsWorker do
 
     context 'site with last screenshot not older enough' do
       before do
-        ScreenshotedSite.should_receive(:find_by_token).with(site_token1) { screenshoted_site1 }
+        ScreenshotedSite.should_receive(:find_by_t).with(site_token1) { screenshoted_site1 }
         Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site1)
       end
 
@@ -91,7 +91,7 @@ describe ScreenshotsWorker do
 
     context 'site with last screenshot older enough' do
       before do
-        ScreenshotedSite.should_receive(:find_by_token).with(site_token2) { screenshoted_site2 }
+        ScreenshotedSite.should_receive(:find_by_t).with(site_token2) { screenshoted_site2 }
         Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site2)
       end
 
