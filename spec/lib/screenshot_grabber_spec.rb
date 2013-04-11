@@ -120,7 +120,7 @@ describe ScreenshotGrabber do
   describe '#referrer_for_screenshot' do
     context 'referrer is a WP plugin path' do
       before do
-        ::Referrer.stub_chain(:where, :by_hits, :first).and_return(stub(url: 'http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php'))
+        ::Referrer.stub_chain(:by_hits_for, :first).and_return(stub(url: 'http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php'))
       end
 
       it 'returns nil' do
@@ -131,7 +131,7 @@ describe ScreenshotGrabber do
     Site::SKIPPED_DOMAINS.each do |domain|
       context "referrer is #{domain}" do
         before do
-          ::Referrer.stub_chain(:where, :by_hits, :first).and_return(stub(url: "http://#{domain}"))
+          ::Referrer.stub_chain(:by_hits_for, :first).and_return(stub(url: "http://#{domain}"))
         end
 
         it 'returns nil' do

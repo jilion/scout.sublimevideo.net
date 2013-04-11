@@ -1,14 +1,11 @@
+require 'sublime_video_private_api/model'
+
 class Referrer
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  include SublimeVideoPrivateApi::Model
+  uses_private_api :my
 
-  field :token
-  field :url
-  field :hits,            type: Integer, default: 0
-  field :badge_hits,      type: Integer, default: 0
-  field :contextual_hits, type: Integer, default: 0
+  def self.by_hits_for(token)
+    all(with_tokens: [token], by_hits: 'desc')
+  end
 
-  attr_accessible :token, :url, :hits, :contextual_hits, :badge_hits
-
-  scope :by_hits, lambda { |way='desc'| order_by([:hits, way.to_sym]) }
 end
