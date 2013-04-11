@@ -51,7 +51,7 @@ class ScreenshotGrabber
   def screenshot_referrer(tempfile)
     if url = referrer_for_screenshot
       unless take_screenshot!(url, tempfile)
-        handle_screenshot_process_exit_status($?.exitstatus) if $?
+        handle_screenshot_process_exit_status($?.exitstatus, url: url) if $?
       end
 
       url
@@ -61,7 +61,7 @@ class ScreenshotGrabber
   def screenshot_hostname!(tempfile)
     url = hostname_for_screenshot
     unless take_screenshot!(url, tempfile)
-      handle_screenshot_process_exit_status!($?.exitstatus) if $?
+      handle_screenshot_process_exit_status!($?.exitstatus, url: url) if $?
     end
 
     url
@@ -77,10 +77,12 @@ class ScreenshotGrabber
     system cmd
   end
 
-  def handle_screenshot_process_exit_status(exit_status, options = { raise: false })
+  def handle_screenshot_process_exit_status(exit_status, options = {})
+    { raise: false }.merge!(options)
+
     case exit_status
     when 1
-      msg = "Couldn't screenshot: #{url} (#{@site_token})"
+      msg = "Couldn't screenshot: #{options[:url]} (#{@site_token})"
       if options[:raise]
         raise msg
       else
@@ -91,8 +93,8 @@ class ScreenshotGrabber
     end
   end
 
-  def handle_screenshot_process_exit_status!(exit_status)
-    handle_screenshot_process_exit_status(exit_status, raise: true)
+  def handle_screenshot_process_exit_status!(exit_status, options = {})
+    handle_screenshot_process_exit_status(exit_status, options.merge(raise: true))
   end
 
   def tag_adult_and_raise
