@@ -56,8 +56,8 @@ class ScreenshotedSite
   # @param [Datetime] date the date to compare the latest screenshot to.
   #
   # @return [Boolean]
-  def latest_screenshot_older_than(date)
-    screenshots.latest.created_at < date
+  def latest_screenshot_older_than(days_count)
+    screenshots.latest.created_at < days_count.days.ago
   end
 
   def prepare_for_carousel

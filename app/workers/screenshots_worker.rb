@@ -57,7 +57,7 @@ class ScreenshotsWorker
   # @see #take_activity_screenshots
   #
   def _sites_to_activity_screenshot(options = {})
-    { plays_threshold: 10, days_interval: 5.days.ago }.merge!(options)
+    options = { plays_threshold: 10, days_interval: 5 }.merge(options)
 
     sites = []
     Site.find_each(select: %w[token], with_state: 'active', with_min_billable_video_views: options[:plays_threshold]) do |site|

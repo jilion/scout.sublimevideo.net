@@ -15,8 +15,12 @@ describe ScreenshotsWorker do
 
   describe '#perform' do
     it 'calls #take_initial_screenshots, #take_activity_screenshots and #delay_itself' do
-      worker.should_receive(:take_initial_screenshots)
-      worker.should_receive(:take_activity_screenshots)
+      delay_stub1 = stub('delay1')
+      delay_stub2 = stub('delay2')
+      described_class.should_receive(:delay) { delay_stub1 }
+      delay_stub1.should_receive(:take_initial_screenshots)
+      described_class.should_receive(:delay) { delay_stub2 }
+      delay_stub2.should_receive(:take_activity_screenshots)
 
       worker.perform
     end
@@ -85,7 +89,7 @@ describe ScreenshotsWorker do
       end
 
       it 'returns an empty array' do
-        worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should be_empty
+        worker.send(:_sites_to_activity_screenshot).should be_empty
       end
     end
 
@@ -96,7 +100,7 @@ describe ScreenshotsWorker do
       end
 
       it 'returns 1 site' do
-        worker.send(:_sites_to_activity_screenshot, plays_threshold: 10, days_interval: 5).should eq [site2]
+        worker.send(:_sites_to_activity_screenshot).should eq [site2]
       end
     end
   end

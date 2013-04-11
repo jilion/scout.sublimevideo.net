@@ -78,7 +78,7 @@ class ScreenshotGrabber
   end
 
   def handle_screenshot_process_exit_status(exit_status, options = {})
-    { raise: false }.merge!(options)
+    options = { raise: false }.merge(options)
 
     case exit_status
     when 1
