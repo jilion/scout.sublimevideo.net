@@ -31,7 +31,9 @@ class Screenshoter
   # Returns whether a screnshot for a site is old enough so that we can take a new one
   #
   def latest_screenshot_is_old_enough?(date = 5.days.ago)
-    ScreenshotedSite.where(t: token).first.latest_screenshot_older_than?(date)
+    screenshoted_site = ScreenshotedSite.where(t: token).first
+
+    screenshoted_site.nil? || screenshoted_site.latest_screenshot_older_than?(date)
   end
 
   private
