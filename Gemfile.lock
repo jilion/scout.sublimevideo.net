@@ -106,6 +106,8 @@ GEM
     heroku-api (0.3.9)
       excon (~> 0.20.1)
     hike (1.2.2)
+    honeybadger (1.6.2)
+      json
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
@@ -270,6 +272,7 @@ DEPENDENCIES
   guard-pow
   guard-rspec
   heroku-api
+  honeybadger
   jquery-rails
   mini_magick
   mongoid

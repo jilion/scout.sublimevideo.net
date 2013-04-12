@@ -18,6 +18,7 @@ gem 'sidekiq'
 gem 'autoscaler'
 gem 'heroku-api'
 gem 'oj'
+gem 'honeybadger'
 
 # Views
 gem 'slim'
