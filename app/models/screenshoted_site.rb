@@ -57,7 +57,9 @@ class ScreenshotedSite
   #
   # @return [Boolean]
   def latest_screenshot_older_than?(date)
-    screenshots.latest.nil? || screenshots.latest.created_at < date
+    screenshots.latest.nil? ||
+    screenshots.latest.created_at.nil? ||
+    screenshots.latest.created_at < date
   end
 
   def prepare_for_carousel

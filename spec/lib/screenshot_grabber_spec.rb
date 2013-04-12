@@ -12,8 +12,9 @@ describe ScreenshotGrabber do
   let(:screenshoted_site)  { stub(lfa: nil) }
   let(:referrer_url)       { 'http://google.com' }
   let(:hostname_url)       { 'http://sublimevideo.net' }
-  let(:image)              { stub }
-  let(:screenshot)         { stub }
+  let(:image)              { stub('image') }
+  let(:screenshots)        { stub('screenshots') }
+  let(:screenshot)         { stub('screenshot') }
   let(:tempfile)           { stub(path: 'tmp/foo.jpg') }
 
   before do
@@ -24,20 +25,16 @@ describe ScreenshotGrabber do
   describe '#take!' do
     context 'site is valid for screenshot' do
       before do
-        screenshot_grabber.stub(site: site)
-        screenshot_grabber.stub(screenshoted_site: screenshoted_site)
-        screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
+        screenshot_grabber.stub(:site) { site }
+        screenshot_grabber.stub(:screenshoted_site) { screenshoted_site }
+        screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
+        screenshoted_site.should_receive(:screenshots) { screenshots }
       end
 
       it 'creates a Screenshot with the image, sets :lfa field to nil and :fac field to 0' do
-        screenshot_grabber.should_receive(:with_tempfile_image).and_yield(referrer_url, image)
-        Screenshot.should_receive(:create!).with(
-          site: screenshoted_site,
-          u: referrer_url,
-          f: image
-        )
-        screenshoted_site.should_receive(:set).with(:lfa, nil).ordered
-        screenshoted_site.should_receive(:set).with(:fac, 0).ordered
+        Screenshot.should_receive(:new).with(u: referrer_url, f: image) { screenshot }
+        screenshots.should_receive(:<<).with(screenshot)
+        screenshoted_site.should_receive(:update_attributes!).with(lfa: nil, fac: 0)
 
         screenshot_grabber.take!
       end

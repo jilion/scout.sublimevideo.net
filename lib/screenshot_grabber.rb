@@ -16,9 +16,8 @@ class ScreenshotGrabber
     return unless site
 
     with_tempfile_image do |url, image|
-      Screenshot.create!(site: screenshoted_site, u: url, f: image)
-      screenshoted_site.set(:lfa, nil)
-      screenshoted_site.set(:fac, 0)
+      screenshoted_site.screenshots << Screenshot.new(u: url, f: image)
+      screenshoted_site.update_attributes!(lfa: nil, fac: 0)
     end
   rescue => ex
     screenshoted_site.touch(:lfa)
