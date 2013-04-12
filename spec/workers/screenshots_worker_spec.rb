@@ -25,18 +25,18 @@ describe ScreenshotsWorker do
     end
   end
 
-  describe '#take_initial_screenshots' do
+  describe '.take_initial_screenshots' do
     it 'enqueues a screenshot job for site without screenshot yet' do
-      worker.should_receive(:_seven_days_ago) { Time.utc(2013,4,4) }
+      described_class.should_receive(:_seven_days_ago) { Time.utc(2013,4,4) }
       Site.should_receive(:find_each).with(select: %w[token], with_state: 'active', created_after: Time.utc(2013,4,4)).and_yield(site1)
       Screenshoter.should_receive(:delay).with(queue: 'scout') { delay_stub }
       delay_stub.should_receive(:take).with(site_token1, 'initial')
 
-      worker.take_initial_screenshots
+      described_class.take_initial_screenshots
     end
   end
 
-  describe '#take_activity_screenshots' do
+  describe '.take_activity_screenshots' do
     let(:tokens_to_activity_screenshot) { [site_token1] }
 
     it 'enqueues a screenshot job for site without screenshot yet' do
@@ -44,7 +44,7 @@ describe ScreenshotsWorker do
       Screenshoter.should_receive(:delay).with(queue: 'scout') { delay_stub }
       delay_stub.should_receive(:take).with(site_token1, 'activity')
 
-      worker.take_activity_screenshots
+      described_class.take_activity_screenshots
     end
   end
 

@@ -15,7 +15,7 @@ class ScreenshotsWorker
   # Delays screenshot jobs for sites that don't have any
   # screenshot yet.
   #
-  def take_initial_screenshots
+  def self.take_initial_screenshots
     Site.find_each(select: %w[token], with_state: 'active', created_after: _seven_days_ago) do |site|
       Screenshoter.delay(queue: 'scout').take(site.token, 'initial')
     end
@@ -25,7 +25,7 @@ class ScreenshotsWorker
   # threshold of video plays and for which the latest screenshot is older
   # than a given days interval.
   #
-  def take_activity_screenshots
+  def self.take_activity_screenshots
     Site.find_each(select: %w[token], with_state: 'active', with_min_billable_video_views: 10) do |site|
       Screenshoter.delay(queue: 'scout').take(site.token, 'activity')
     end
@@ -33,8 +33,8 @@ class ScreenshotsWorker
 
   private
 
-  def _seven_days_ago
-    (Time.now - 3600*24*7).change(hour:0)
+  def self._seven_days_ago
+    Time.now.utc - 3600*24*7
   end
 
 end
