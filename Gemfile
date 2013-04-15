@@ -20,6 +20,8 @@ gem 'heroku-api'
 gem 'oj'
 gem 'honeybadger'
 
+gem 'rack-status'
+
 # Views
 gem 'slim'
 gem 'jquery-rails'
