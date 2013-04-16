@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/jilion/configurator.git
+  revision: 3a8df3f51dea0e414bc9cd86fea1f85b1a30745a
+  specs:
+    configurator (1.0.0)
+      activesupport (>= 3.2.12)
+
 GEM
   remote: https://rubygems.org/
   remote: https://8dezqz7z7HWea9vtaFwg@gem.fury.io/me/
@@ -264,6 +271,7 @@ DEPENDENCIES
   carrierwave (~> 0.8)
   carrierwave-mongoid (~> 0.5)
   coffee-rails
+  configurator!
   database_cleaner
   debugger
   factory_girl

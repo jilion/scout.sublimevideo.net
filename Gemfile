@@ -19,6 +19,7 @@ gem 'autoscaler'
 gem 'heroku-api'
 gem 'oj'
 gem 'honeybadger'
+gem 'configurator', github: 'jilion/configurator'
 
 gem 'rack-status'
 
