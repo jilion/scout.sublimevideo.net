@@ -16,7 +16,7 @@ describe Site do
     Site.new(hostname: 'bar.com', created_at: Time.utc(2013,4,8))
 
     stub_api_for(described_class) do |stub|
-      default_params = ['with_state=active', 'not_tagged_with=adult']
+      default_params = ['not_tagged_with=adult']
       described_class::SKIPPED_DOMAINS.each { |domain| default_params << "without_hostnames[]=#{domain}" }
 
       # all_new_sites_for
