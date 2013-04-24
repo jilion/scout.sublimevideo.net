@@ -17,7 +17,7 @@ class Site
   def self.default_params
     {
       select: %w[id token hostname last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
-      with_state: 'active', without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
+      without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
     }
   end
 
