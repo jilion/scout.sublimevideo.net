@@ -45,5 +45,3 @@ module ScoutSublimevideo
     config.active_support.escape_html_entities_in_json = true
   end
 end
-
-require 'env_yaml'

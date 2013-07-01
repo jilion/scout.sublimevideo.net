@@ -10,7 +10,7 @@ gem 'sublime_video_private_api', '~> 1.5' # hosted on gemfury
 gem 'mongoid'
 
 # Internals
-gem 'fog',                 '~> 1.10'
+gem 'fog',                 '~> 1.12'
 gem 'carrierwave',         '~> 0.8', require: ['carrierwave', 'carrierwave/processing/mime_types']
 gem 'carrierwave-mongoid', '~> 0.5', require: 'carrierwave/mongoid'
 gem 'mini_magick'
@@ -19,7 +19,6 @@ gem 'autoscaler'
 gem 'heroku-api'
 gem 'oj'
 gem 'honeybadger'
-gem 'configurator', github: 'jilion/configurator'
 
 gem 'rack-status'
 
@@ -48,6 +47,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'dotenv-rails'
   gem 'rspec-rails'
   gem 'debugger'
 end
