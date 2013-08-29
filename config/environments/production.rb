@@ -1,6 +1,6 @@
 ScoutSublimevideo::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-  use Rack::Auth::Basic, "Protected Area" do |username, password|
+  config.middleware.use Rack::Auth::Basic, "Protected Area" do |username, password|
     username == 'jilion' && password == ENV['AUTH_PASSWORD']
   end
 
