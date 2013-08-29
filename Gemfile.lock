@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/jilion/rack-devise_cookie_auth.git
+  revision: 55b8b2bf02b9733426b91da2e81f709c756dc778
+  specs:
+    rack-devise_cookie_auth (1.0.0)
+      activesupport (>= 4.0.0)
+      rack (>= 1.0)
+
+GIT
   remote: git://github.com/kolodovskyy/kaminari.git
   revision: 3047786adf33242d3a964b50491e584af52ce945
   specs:
@@ -159,9 +167,6 @@ GEM
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
-    rack-devise_cookie_auth (0.1.0)
-      activesupport (>= 2.3.2)
-      rack (>= 1.0)
     rack-livereload (0.3.15)
       rack
     rack-status (1.0.0)
@@ -293,7 +298,7 @@ DEPENDENCIES
   newrelic_rpm
   oj
   quiet_assets
-  rack-devise_cookie_auth
+  rack-devise_cookie_auth!
   rack-livereload
   rack-status
   rails (= 4.0.0)

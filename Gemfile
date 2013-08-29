@@ -34,7 +34,7 @@ gem 'sass-rails'
 
 group :staging, :production do
   gem 'unicorn', require: false
-  gem 'rack-devise_cookie_auth'
+  gem 'rack-devise_cookie_auth', github: 'jilion/rack-devise_cookie_auth'
   gem 'newrelic_rpm'
   gem 'rails_12factor'
 end
