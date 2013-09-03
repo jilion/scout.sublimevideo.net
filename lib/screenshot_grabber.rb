@@ -21,7 +21,7 @@ class ScreenshotGrabber
     end
   rescue => ex
     screenshoted_site.touch(:lfa)
-    screenshoted_site.inc(:fac, 1)
+    screenshoted_site.inc(fac: 1)
     log :error, "EX: #{ex.inspect}"
     true # don't retry the work...
   end
