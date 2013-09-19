@@ -8,6 +8,8 @@ ScoutSublimevideo::Application.configure do
     resource: 'admin',
     redirect_to: 'https://admin.sublimevideo.net/login'
 
+  config.eager_load = true
+
   # Code is not reloaded between requests
   config.cache_classes = true
 

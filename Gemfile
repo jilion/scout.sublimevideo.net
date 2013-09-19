@@ -7,7 +7,7 @@ gem 'rails', '4.0.0'
 gem 'sublime_video_private_api', '~> 1.5' # hosted on gemfury
 
 # Databases
-gem 'mongoid', github: 'mongoid/mongoid' # Rails 4 support
+gem 'mongoid', github: 'mongoid' # Rails 4 support
 gem 'kaminari', github: 'kolodovskyy/kaminari' # https://github.com/amatsuda/kaminari/pull/433
 
 # Internals
