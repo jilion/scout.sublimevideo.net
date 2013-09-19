@@ -18,14 +18,14 @@ describe Screenshoter do
 
     it "is screenshotable" do
       @screenshotable.each do |screenshoted_site|
-        described_class.new(token: screenshoted_site.t).should be_screenshot_possible
+        expect(described_class.new(token: screenshoted_site.t)).to be_screenshot_possible
       end
-      described_class.new(token: 'foo').should be_screenshot_possible
+      expect(described_class.new(token: 'foo')).to be_screenshot_possible
     end
 
     it "is not screenshotable" do
       @not_screenshotable.each do |screenshoted_site|
-        described_class.new(token: screenshoted_site.t).should_not be_screenshot_possible
+        expect(described_class.new(token: screenshoted_site.t)).not_to be_screenshot_possible
       end
     end
   end
@@ -33,8 +33,8 @@ describe Screenshoter do
   describe '#latest_screenshot_is_old_enough?' do
     let(:screenshot) { create(:screenshot, created_at: 3.days.ago) }
 
-    it { described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(5.days.ago).should be_false }
-    it { described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(2.days.ago).should be_true }
+    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(5.days.ago)).to be_false }
+    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(2.days.ago)).to be_true }
   end
 
 end
