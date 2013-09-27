@@ -8,12 +8,12 @@ describe ScreenshotWorker do
 
   let(:worker)             { described_class.new }
   let(:site_token)         { 'site_token' }
-  let(:screenshot_grabber) { stub }
+  let(:screenshot_grabber) { double }
 
   describe '#perform' do
     it 'instantiates a ScreenshotGrabber and calls take! on it' do
-      ScreenshotGrabber.should_receive(:new).with(site_token) { screenshot_grabber }
-      screenshot_grabber.should_receive(:take!)
+      expect(ScreenshotGrabber).to receive(:new).with(site_token) { screenshot_grabber }
+      expect(screenshot_grabber).to receive(:take!)
 
       worker.perform(site_token)
     end

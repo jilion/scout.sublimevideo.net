@@ -1,9 +1,6 @@
 dependencies:
   cache_directories:
     - "bundle"
-machine:
-  ruby:
-    version: 2.0.0-p0
 deployment:
   production:
     branch: master

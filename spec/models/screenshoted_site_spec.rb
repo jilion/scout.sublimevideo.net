@@ -22,8 +22,8 @@ describe ScreenshotedSite do
     end
 
     it 'returns site with lfa >= (calculated date from given attempts count)' do
-      described_class.cannot_be_retried(1).entries.should eq [@failed_today]
-      described_class.cannot_be_retried(2).entries.should eq [@failed_3_days_ago2]
+      expect(described_class.cannot_be_retried(1).entries).to eq [@failed_today]
+      expect(described_class.cannot_be_retried(2).entries).to eq [@failed_3_days_ago2]
     end
   end
 
@@ -37,7 +37,7 @@ describe ScreenshotedSite do
     end
 
     it 'returns site with failed attempts >= max attempts' do
-      described_class.with_max_attempts.entries.should eq [@failed5, @failed6]
+      expect(described_class.with_max_attempts.entries).to eq [@failed5, @failed6]
     end
   end
 
@@ -48,7 +48,7 @@ describe ScreenshotedSite do
     end
     let(:screenshoted_site) { create(:screenshoted_site, attributes) }
 
-    it { screenshoted_site.latest_screenshot_older_than?(1.day.ago).should be_true }
-    it { screenshoted_site.latest_screenshot_older_than?(5.days.ago).should be_false }
+    it { expect(screenshoted_site.latest_screenshot_older_than?(1.day.ago)).to be_true }
+    it { expect(screenshoted_site.latest_screenshot_older_than?(5.days.ago)).to be_false }
   end
 end
