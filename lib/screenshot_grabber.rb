@@ -111,13 +111,13 @@ class ScreenshotGrabber
 
   def referrer_for_screenshot
     @referrer_for_screenshot ||= begin
-      if referrer = Referrer.by_hits_for(@site_token).first
-        case referrer.url
+      if referrer = SiteStatAdmin.by_hits_for(@site_token).first
+        case referrer
         # don't screenshot unaccessible WP page nor local domains and huge/common domains
         when *(Site::SKIPPED_DOMAINS.map { |domain| Regexp.new(Regexp.escape(domain)) } + SKIPPED_DOMAINS)
           nil
         else
-          referrer.url
+          referrer
         end
       end
     end

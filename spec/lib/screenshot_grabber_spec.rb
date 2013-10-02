@@ -18,7 +18,7 @@ describe ScreenshotGrabber do
   let(:tempfile)           { double(path: 'tmp/foo.jpg') }
 
   before do
-    stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'Referrer'
+    stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'SiteStatAdmin'
     Site.stub(:find).with('site_token') { site }
   end
 
@@ -117,7 +117,7 @@ describe ScreenshotGrabber do
   describe '#referrer_for_screenshot' do
     context 'referrer is a WP plugin path' do
       before do
-        ::Referrer.stub_chain(:by_hits_for, :first).and_return(double(url: 'http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php'))
+        ::SiteStatAdmin.stub_chain(:by_hits_for, :first).and_return(double(url: 'http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php'))
       end
 
       it 'returns nil' do
@@ -128,7 +128,7 @@ describe ScreenshotGrabber do
     Site::SKIPPED_DOMAINS.each do |domain|
       context "referrer is #{domain}" do
         before do
-          ::Referrer.stub_chain(:by_hits_for, :first).and_return(double(url: "http://#{domain}"))
+          ::SiteStatAdmin.stub_chain(:by_hits_for, :first).and_return(double(url: "http://#{domain}"))
         end
 
         it 'returns nil' do
