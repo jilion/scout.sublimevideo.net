@@ -48,4 +48,4 @@ window.ScoutSublimeVideo.retakeScreenshot = ->
     type: 'POST'
     url: "/take/#{ScoutSublimeVideo.carousel.currentCell.info.token}"
   ).done (msg) ->
-    console.log msg
+    console.error msg
