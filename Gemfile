@@ -3,8 +3,8 @@ source 'https://8dezqz7z7HWea9vtaFwg:@gem.fury.io/me/' # thibaud@jilion.com acco
 
 ruby '2.0.0'
 
-gem 'rails', '4.0.0'
-gem 'sublime_video_private_api', '~> 1.5' # hosted on gemfury
+gem 'rails', '4.0.1.rc3'
+gem 'sublime_video_private_api', '~> 1.6' # hosted on gemfury
 
 # Databases
 gem 'mongoid', github: 'mongoid' # Rails 4 support
