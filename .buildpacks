@@ -1,2 +1,2 @@
 https://github.com/stomita/heroku-buildpack-phantomjs
-https://github.com/heroku/heroku-buildpack-ruby
+https://s3-external-1.amazonaws.com/heroku-buildpack-ruby/ruby-bundler1.4.tgz
