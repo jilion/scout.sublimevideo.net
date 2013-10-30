@@ -7,7 +7,7 @@ gem 'rails', '4.0.1.rc3'
 gem 'sublime_video_private_api', '~> 1.6' # hosted on gemfury
 
 # Databases
-gem 'mongoid', github: 'mongoid' # Rails 4 support
+gem 'mongoid', github: 'mongoid', ref: 'f91fe' # Rails 4 support
 gem 'kaminari', github: 'kolodovskyy/kaminari' # https://github.com/amatsuda/kaminari/pull/433
 
 # Internals
@@ -18,25 +18,30 @@ gem 'mini_magick'
 gem 'sidekiq'
 gem 'autoscaler'
 gem 'heroku-api'
-gem 'oj'
-gem 'honeybadger'
-
-gem 'rack-status'
+gem 'oj' # Faster JSON
+gem 'kgio' # Faster IO
 
 # Views
 gem 'slim'
 gem 'coffee-rails'
 gem 'jquery-rails'
 
-# Assets
-gem 'uglifier'
-gem 'sass-rails'
+# Monitoring
+gem 'rack-status'
+gem 'honeybadger'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'uglifier'
+  gem 'sass-rails'
+end
 
 group :staging, :production do
   gem 'unicorn', require: false
+  gem 'rails_12factor'
   gem 'rack-devise_cookie_auth', github: 'jilion/rack-devise_cookie_auth'
   gem 'newrelic_rpm'
-  gem 'rails_12factor'
 end
 
 group :development do
