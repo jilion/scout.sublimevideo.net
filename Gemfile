@@ -16,8 +16,6 @@ gem 'carrierwave', require: ['carrierwave', 'carrierwave/processing/mime_types']
 gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
 gem 'mini_magick'
 gem 'sidekiq'
-gem 'autoscaler'
-gem 'heroku-api'
 gem 'oj' # Faster JSON
 gem 'kgio' # Faster IO
 
