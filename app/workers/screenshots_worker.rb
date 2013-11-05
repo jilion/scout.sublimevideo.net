@@ -19,6 +19,7 @@ class ScreenshotsWorker
     Site.find_each(select: %w[token], with_state: 'active', created_after: _seven_days_ago) do |site|
       Screenshoter.delay(queue: 'scout').take(site.token, 'initial')
     end
+  rescue MultiJson::LoadError
   end
 
   # Delays screenshot jobs for sites with more than a given
