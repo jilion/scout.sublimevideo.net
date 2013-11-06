@@ -12,6 +12,7 @@ gem 'kaminari', github: 'kolodovskyy/kaminari' # https://github.com/amatsuda/kam
 
 # Internals
 gem 'fog'
+gem 'unf' # encoding for fog
 gem 'carrierwave', require: ['carrierwave', 'carrierwave/processing/mime_types']
 gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
 gem 'mini_magick'

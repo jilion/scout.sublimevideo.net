@@ -28,7 +28,7 @@ describe ScreenshotGrabber do
         screenshot_grabber.stub(:site) { site }
         screenshot_grabber.stub(:screenshoted_site) { screenshoted_site }
         expect(screenshot_grabber).to receive(:with_tempfile_image).and_yield(referrer_url, image)
-        expect(screenshoted_site).to receive(:screenshots) { screenshots }
+        screenshoted_site.stub(:screenshots) { screenshots }
       end
 
       it 'creates a Screenshot with the image, sets :lfa field to nil and :fac field to 0' do

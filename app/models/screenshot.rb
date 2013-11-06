@@ -9,5 +9,5 @@ class Screenshot
 
   mount_uploader :f, ScreenshotUploader
 
-  validates :u, :f, presence: true
+  validates :u, presence: true
 end

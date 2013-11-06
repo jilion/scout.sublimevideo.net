@@ -9,5 +9,4 @@ describe Screenshot do
   let(:screenshot) { described_class.create(attributes) }
 
   it { should validate_presence_of(:u) }
-  it { should validate_presence_of(:f) }
 end

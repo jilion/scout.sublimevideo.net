@@ -137,7 +137,7 @@ class ScreenshotGrabber
 
   def log(level, message)
     if logger && (level == :error || @options[:debug])
-      logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n\t#{message}")
+      logger.send(level, "[#{Time.now.utc.strftime("%F %T")}] TOKEN: ##{@site_token}\n#{message}\n")
     end
   end
 
