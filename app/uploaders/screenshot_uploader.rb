@@ -16,7 +16,7 @@ class ScreenshotUploader < CarrierWave::Uploader::Base
   end
 
   def url(*args)
-    super.to_s.gsub(/#{fog_directory}.s3.amazonaws.com/, "s3.amazonaws.com/#{fog_directory}")
+    super.to_s.gsub(/#{fog_directory}\.s3\.amazonaws\.com/, "s3.amazonaws.com/#{fog_directory}")
   end
 
   def fog_public

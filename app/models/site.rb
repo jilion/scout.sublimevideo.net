@@ -32,7 +32,7 @@ class Site
 
   def self._default_params
     {
-      select: %w[id token hostname last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
+      select: %w[last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
       without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
     }
   end
