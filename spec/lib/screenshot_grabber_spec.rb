@@ -19,16 +19,16 @@ describe ScreenshotGrabber do
 
   before do
     stub_class 'ScreenshotedSite', 'Screenshot', 'Site', 'SiteStatAdmin'
-    Site.stub(:find).with('site_token') { site }
+    allow(Site).to receive(:find).with('site_token') { site }
   end
 
   describe '#take!' do
     context 'site is valid for screenshot' do
       before do
-        screenshot_grabber.stub(:site) { site }
-        screenshot_grabber.stub(:screenshoted_site) { screenshoted_site }
+        allow(screenshot_grabber).to receive(:site) { site }
+        allow(screenshot_grabber).to receive(:screenshoted_site) { screenshoted_site }
         expect(screenshot_grabber).to receive(:with_tempfile_image).and_yield(referrer_url, image)
-        screenshoted_site.stub(:screenshots) { screenshots }
+        allow(screenshoted_site).to receive(:screenshots) { screenshots }
       end
 
       it 'creates a Screenshot with the image, sets :lfa field to nil and :fac field to 0' do
@@ -42,9 +42,9 @@ describe ScreenshotGrabber do
 
     context 'site screenshoting raises an exception' do
       before do
-        screenshot_grabber.stub(site: site)
-        screenshot_grabber.stub(screenshoted_site: screenshoted_site)
-        screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
+        allow(screenshot_grabber).to receive(:site).and_return(site)
+        allow(screenshot_grabber).to receive(:screenshoted_site).and_return(screenshoted_site)
+        allow(screenshot_grabber).to receive(:referrer_for_screenshot).and_return(referrer_url)
       end
 
       it 'sets the :lfa field to the ScreenshotedSite' do
@@ -71,7 +71,7 @@ describe ScreenshotGrabber do
 
   describe '#with_tempfile_image' do
     before do
-      screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
+      allow(screenshot_grabber).to receive(:referrer_for_screenshot).and_return(referrer_url)
     end
 
     it 'yield with an url and an image that is not empty' do
@@ -85,8 +85,8 @@ describe ScreenshotGrabber do
   describe '#screenshot_referrer_or_hostname' do
     context 'referrer exists' do
       before do
-        screenshot_grabber.stub(referrer_for_screenshot: referrer_url)
-        screenshot_grabber.stub(hostname_for_screenshot: hostname_url)
+        allow(screenshot_grabber).to receive(:referrer_for_screenshot).and_return(referrer_url)
+        allow(screenshot_grabber).to receive(:hostname_for_screenshot).and_return(hostname_url)
       end
 
       context 'screenshot is successful' do
@@ -115,9 +115,12 @@ describe ScreenshotGrabber do
   end
 
   describe '#referrer_for_screenshot' do
+    let(:sorted_query) { double }
+
     context 'referrer is a WP plugin path' do
       before do
-        ::SiteStatAdmin.stub_chain(:by_hits_for, :first).and_return('http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php')
+        expect(SiteStatAdmin).to receive(:by_hits_for).and_return(sorted_query)
+        expect(sorted_query).to receive(:first).and_return('http://mydomain.com/wp-content/plugins/sublimevideo-official/blabla.php')
       end
 
       it 'returns nil' do
@@ -128,7 +131,8 @@ describe ScreenshotGrabber do
     Site::SKIPPED_DOMAINS.each do |domain|
       context "referrer is #{domain}" do
         before do
-          ::SiteStatAdmin.stub_chain(:by_hits_for, :first).and_return("http://#{domain}")
+          expect(SiteStatAdmin).to receive(:by_hits_for).and_return(sorted_query)
+          expect(sorted_query).to receive(:first).and_return("http://#{domain}")
         end
 
         it 'returns nil' do

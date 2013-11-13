@@ -33,8 +33,8 @@ describe Screenshoter do
   describe '#latest_screenshot_is_old_enough?' do
     let(:screenshot) { create(:screenshot, created_at: 3.days.ago) }
 
-    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(5.days.ago)).to be_false }
-    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(2.days.ago)).to be_true }
+    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(5.days.ago)).to be_falsey }
+    it { expect(described_class.new(token: screenshot.site.t).latest_screenshot_is_old_enough?(2.days.ago)).to be_truthy }
   end
 
 end

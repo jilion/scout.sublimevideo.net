@@ -48,7 +48,7 @@ describe ScreenshotedSite do
     end
     let(:screenshoted_site) { create(:screenshoted_site, attributes) }
 
-    it { expect(screenshoted_site.latest_screenshot_older_than?(1.day.ago)).to be_true }
-    it { expect(screenshoted_site.latest_screenshot_older_than?(5.days.ago)).to be_false }
+    it { expect(screenshoted_site.latest_screenshot_older_than?(1.day.ago)).to be_truthy }
+    it { expect(screenshoted_site.latest_screenshot_older_than?(5.days.ago)).to be_falsey }
   end
 end

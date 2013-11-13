@@ -35,17 +35,17 @@ describe Site do
     let(:sites) { described_class.all_new_sites_for(Time.utc(2013,4,9)) }
 
     it 'returns sites with a hostname which is not in SKIPPED_DOMAINS' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
 
     it 'returns only active sites' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
 
     it 'returns only sites created on date' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
   end
@@ -54,17 +54,17 @@ describe Site do
     let(:sites) { described_class.all_new_active_sites_for(Time.utc(2013,4,9)) }
 
     it 'returns sites with a hostname which is not in SKIPPED_DOMAINS' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
 
     it 'returns only active sites' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
 
     it 'returns only sites created on date' do
-      expect(sites).to have(1).site
+      expect(sites.size).to eq(1)
       expect(sites[0].hostname).to eq site.hostname
     end
   end

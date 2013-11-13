@@ -21,7 +21,7 @@ describe ScreenshotUploader do
   end
 
   it "is private" do
-    expect(uploader.fog_public).to be_false
+    expect(uploader.fog_public).to be_falsey
   end
 
   it "has 'image/jpeg' as content type" do
