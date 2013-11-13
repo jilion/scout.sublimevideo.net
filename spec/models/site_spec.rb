@@ -24,7 +24,7 @@ describe Site do
       stub.get("/private_api/sites?#{params.sort.join('&')}") { |env| [200, {}, [site].to_json] }
 
       # all_new_active_sites_for
-      params = default_params.dup << "first_billable_plays_on_week=#{day}" << 'by_last_30_days_billable_video_views=desc'
+      params = default_params.dup << "first_admin_starts_on_week=#{day}" << 'by_last_30_days_admin_starts=desc'
       stub.get("/private_api/sites?#{params.sort.join('&')}") { |env| [200, {}, [site].to_json] }
 
       stub.get("/private_api/sites/1") { |env| [200, {}, site.to_json] }
