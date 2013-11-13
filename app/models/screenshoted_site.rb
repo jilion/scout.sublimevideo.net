@@ -39,11 +39,11 @@ class ScreenshotedSite
   end
 
   # Returns the screenshoted sites corresponding to the given Site array
-  # sorted by last_30_days_billable_video_views DESC
+  # sorted by last_30_days_admin_starts DESC
   #
   # @param [Array<Site>] sites array of Site instances
   def self.from_sites_sorted_by_billable_views(sites)
-    from_sites(sites).sort { |a, b| b.site_info.last_30_days_billable_video_views <=> a.site_info.last_30_days_billable_video_views }
+    from_sites(sites).sort { |a, b| b.site_info.last_30_days_admin_starts <=> a.site_info.last_30_days_admin_starts }
   end
 
   def site_info
@@ -69,7 +69,7 @@ class ScreenshotedSite
         thumb: screenshot ? screenshot.f.url(:carousel) : '/no-screenshot.png',
         link: screenshot ? screenshot.u : url_with_protocol(site_info.hostname),
         hostname: site_info.hostname,
-        views: site_info.last_30_days_billable_video_views,
+        views: site_info.last_30_days_admin_starts,
         video_tags: site_info.last_30_days_video_tags,
         tags: site_info.tags.join(', ')
       }

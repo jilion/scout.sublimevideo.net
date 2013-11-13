@@ -11,13 +11,7 @@ class Site
   end
 
   def self.all_new_active_sites_for(timestamp)
-    all(_default_params.merge(first_billable_plays_on_week: timestamp, by_last_30_days_billable_video_views: 'desc', per: 1000))
-  end
-
-  def last_30_days_billable_video_views
-    @last_30_days_billable_video_views ||= begin
-      last_30_days_main_video_views.to_i + last_30_days_extra_video_views.to_i + last_30_days_embed_video_views.to_i
-    end
+    all(_default_params.merge(first_admin_starts_on_week: timestamp, by_last_30_days_admin_starts: 'desc', per: 1000))
   end
 
   def safe_status
@@ -32,7 +26,7 @@ class Site
 
   def self._default_params
     {
-      select: %w[last_30_days_main_video_views last_30_days_extra_video_views last_30_days_embed_video_views last_30_days_video_tags],
+      select: %w[last_30_days_admin_starts last_30_days_video_tags],
       without_hostnames: SKIPPED_DOMAINS, not_tagged_with: 'adult'
     }
   end
