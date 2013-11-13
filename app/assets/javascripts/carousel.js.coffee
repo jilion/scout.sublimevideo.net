@@ -100,15 +100,15 @@ class ScoutSublimeVideo.Carousel
 
       @camera.css
         webkitTransform: "rotateY(#{angle}deg)"
-        webkitTransitionDuration: '330ms'
+        webkitTransitionDuration: '50ms'
 
       clearTimeout(@currentTimer) if @currentTimer
 
       @currentTimer = setTimeout ->
         @camera.css
           webkitTransform: 'rotateY(0)'
-          webkitTransitionDuration: '5s'
-      , 330
+          webkitTransitionDuration: '1s'
+      , 50
 
   sizeAndPositionImageInCell: (image, cell) ->
     imgWidth   = image[0].width

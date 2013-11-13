@@ -12,7 +12,7 @@
 
 .fader {
   -webkit-transition-property: opacity;
-  -webkit-transition-duration: 550ms;
+  -webkit-transition-duration: 50ms;
   -webkit-transition-timing-function: ease-in-out;
 }
 
@@ -43,7 +43,7 @@ div#camera {
 
 div#dolly {
   -webkit-transition-property: -webkit-transform;
-  -webkit-transition-duration: 550ms;
+  -webkit-transition-duration: 50ms;
   -webkit-transition-timing-function: ease-out;
   -webkit-transform: translate3d(0, 0, 0);
 }
@@ -55,7 +55,7 @@ div.cell.reflection {
 
 div.cell {
   -webkit-transition-property: -webkit-transform opacity;
-  -webkit-transition-duration: 550ms;
+  -webkit-transition-duration: 50ms;
   -webkit-transform: translate3d(0, 0, 0);
 }
 
@@ -63,7 +63,7 @@ div.cell img {
   display: block;
   position: absolute;
   -webkit-transition-property: -webkit-transform /* PERF -webkit-box-shadow */ /* border-color */;
-  -webkit-transition-duration: 550ms;
+  -webkit-transition-duration: 50ms;
   -webkit-transform: translate3d(0, 0, 0);
 }
 
@@ -80,7 +80,7 @@ div.original.selected img {
 
 .mover {
   -webkit-transition-property: -webkit-transform;
-  -webkit-transition-duration: 550ms;
+  -webkit-transition-duration: 50ms;
 }
 
 div.original.selected .mover {
