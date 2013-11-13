@@ -3,11 +3,12 @@ source 'https://8dezqz7z7HWea9vtaFwg:@gem.fury.io/me/' # thibaud@jilion.com acco
 
 ruby '2.0.0'
 
-gem 'rails', '~> 4.0.1.rc4'
+gem 'rails', '~> 4.0.1'
 gem 'sublime_video_private_api', '~> 1.6' # hosted on gemfury
 
 # Databases
-gem 'mongoid', github: 'mongoid', ref: 'f91fe' # Rails 4 support
+gem 'mongoid', github: 'mongoid'
+gem 'moped', github: 'mongoid/moped', branch: 'auth_connection_pool'
 gem 'kaminari', github: 'kolodovskyy/kaminari' # https://github.com/amatsuda/kaminari/pull/433
 
 # Internals
