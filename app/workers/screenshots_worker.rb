@@ -16,7 +16,7 @@ class ScreenshotsWorker
   # screenshot yet.
   #
   def self.take_initial_screenshots
-    Site.find_each(select: %w[token], with_state: 'active', created_after: _seven_days_ago) do |site|
+    Site.find_each(select: %w[token], created_after: _seven_days_ago) do |site|
       Screenshoter.delay(queue: 'scout').take(site.token, 'initial')
     end
   rescue MultiJson::LoadError
@@ -27,7 +27,7 @@ class ScreenshotsWorker
   # than a given days interval.
   #
   def self.take_activity_screenshots
-    Site.find_each(select: %w[token], with_state: 'active', with_min_billable_video_views: 10) do |site|
+    Site.find_each(select: %w[token], with_min_admin_starts: 10) do |site|
       Screenshoter.delay(queue: 'scout').take(site.token, 'activity')
     end
   end
