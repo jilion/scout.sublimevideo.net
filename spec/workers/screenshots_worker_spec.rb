@@ -28,7 +28,7 @@ describe ScreenshotsWorker do
   describe '.take_initial_screenshots' do
     it 'enqueues a screenshot job for site without screenshot yet' do
       expect(described_class).to receive(:_seven_days_ago) { Time.utc(2013,4,4) }
-      expect(Site).to receive(:find_each).with(select: %w[token], with_state: 'active', created_after: Time.utc(2013,4,4)).and_yield(site1)
+      expect(Site).to receive(:find_each).with(select: %w[token], created_after: Time.utc(2013,4,4)).and_yield(site1)
       expect(Screenshoter).to receive(:delay).with(queue: 'scout') { delay_stub }
       expect(delay_stub).to receive(:take).with(site_token1, 'initial')
 
@@ -40,7 +40,7 @@ describe ScreenshotsWorker do
     let(:tokens_to_activity_screenshot) { [site_token1] }
 
     it 'enqueues a screenshot job for site without screenshot yet' do
-      expect(Site).to receive(:find_each).with(select: %w[token], with_state: 'active', with_min_billable_video_views: 10).and_yield(site1)
+      expect(Site).to receive(:find_each).with(select: %w[token], with_min_admin_starts: 10).and_yield(site1)
       expect(Screenshoter).to receive(:delay).with(queue: 'scout') { delay_stub }
       expect(delay_stub).to receive(:take).with(site_token1, 'activity')
 
