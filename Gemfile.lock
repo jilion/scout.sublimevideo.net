@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: ad9000a7e5b099c957a6e6a9b1758e0461148f8e
+  revision: 90f85a77df5a6cb4a4f5f6aaf9a8203dbe99d4b5
   specs:
     mongoid (4.0.0)
       activemodel (~> 4.0.0)
@@ -34,8 +34,7 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/moped.git
-  revision: 413c858fab9e642372f715dc3598281ac5848f15
-  branch: auth_connection_pool
+  revision: da92f1b4e935e2831986d26e8d89bf7edaf8c02a
   specs:
     moped (2.0.0.beta3)
       bson (~> 2.0.0.rc3)
@@ -123,7 +122,7 @@ GEM
       nokogiri (~> 1.5)
       ruby-hmac
     formatador (0.2.4)
-    guard (2.2.3)
+    guard (2.2.4)
       formatador (>= 0.2.4)
       listen (~> 2.1)
       lumberjack (~> 1.0)
@@ -170,7 +169,7 @@ GEM
     newrelic_rpm (3.6.9.171)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
-    oj (2.2.0)
+    oj (2.2.2)
     optionable (0.1.1)
     origin (1.1.0)
     polyglot (0.3.3)

@@ -8,7 +8,7 @@ gem 'sublime_video_private_api', '~> 1.6' # hosted on gemfury
 
 # Databases
 gem 'mongoid', github: 'mongoid'
-gem 'moped', github: 'mongoid/moped', branch: 'auth_connection_pool'
+gem 'moped', github: 'mongoid/moped'
 gem 'mongoid-grid_fs', github: 'ahoward/mongoid-grid_fs'
 gem 'kaminari', github: 'kolodovskyy/kaminari' # https://github.com/amatsuda/kaminari/pull/433
 
