@@ -48,7 +48,9 @@ class Screenshoter
 
   def _cannot_be_retried_yet?
     (1...ScreenshotedSite::MAX_ATTEMPTS).any? do |n|
-      ScreenshotedSite.where(t: token).cannot_be_retried(n).present?
+      rescue_and_retry(3, Errno::EBADF) do
+        ScreenshotedSite.where(t: token).cannot_be_retried(n).present?
+      end
     end
   end
 
