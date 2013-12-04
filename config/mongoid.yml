@@ -4,9 +4,6 @@ development:
       database: sv-scout-development
       hosts:
         - localhost:27017
-      options:
-        preload_models: true
-        use_utc: true
 test:
   sessions:
     default:
@@ -14,7 +11,6 @@ test:
       hosts:
         - localhost:27017
       options:
-        preload_models: true
         retry_interval: 0
         max_retries: 1
 production:
@@ -22,10 +18,5 @@ production:
     default:
       uri: <%= ENV['MONGOHQ_URL'] %>
       options:
-        identity_map_enabled: false
-        skip_version_check: true
-        preload_models: true
         timeout: 30
         pool_size: 5
-        use_utc: true
-        safe: true
