@@ -26,12 +26,12 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/moped.git
-  revision: 3a4b630e5d31a918b322e08a59adfe9e38939ffa
+  revision: da92f1b4e935e2831986d26e8d89bf7edaf8c02a
+  ref: da92f1b4e935e2831986d26e8d89bf7edaf8c02a
   specs:
-    moped (2.0.0.beta4)
-      bson (~> 2.0)
-      connection_pool (~> 1.2)
-      optionable (~> 0.2.0)
+    moped (2.0.0.beta3)
+      bson (~> 2.0.0.rc3)
+      optionable (~> 0.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -166,7 +166,7 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     oj (2.3.0)
-    optionable (0.2.0)
+    optionable (0.1.1)
     origin (1.1.0)
     polyglot (0.3.3)
     pry (0.9.12.4)
