@@ -16,22 +16,22 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: f8b439dd9a59b769389aff81a42502cd857cf7fa
+  revision: fc589421bf8bcc85769400563ac43afa3fa6af29
   specs:
     mongoid (4.0.0.alpha1)
       activemodel (~> 4.0.0)
       moped (~> 2.0.beta4)
-      origin (~> 1.0)
+      origin (~> 2.0)
       tzinfo (~> 0.3.37)
 
 GIT
   remote: git://github.com/mongoid/moped.git
-  revision: da92f1b4e935e2831986d26e8d89bf7edaf8c02a
-  ref: da92f1b4e935e2831986d26e8d89bf7edaf8c02a
+  revision: 9a88cd9758456b14ea1df03772f20ec482e91d21
   specs:
-    moped (2.0.0.beta3)
-      bson (~> 2.0.0.rc3)
-      optionable (~> 0.1.1)
+    moped (2.0.0.beta4)
+      bson (~> 2.0)
+      connection_pool (~> 1.2)
+      optionable (~> 0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -90,7 +90,7 @@ GEM
     dotenv-rails (0.9.0)
       dotenv (= 0.9.0)
     erubis (2.7.0)
-    excon (0.28.0)
+    excon (0.31.0)
     execjs (2.0.2)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
@@ -104,9 +104,9 @@ GEM
       faraday (~> 0.8)
       multi_json (~> 1.3)
     ffi (1.9.3)
-    fog (1.18.0)
+    fog (1.19.0)
       builder
-      excon (~> 0.28.0)
+      excon (~> 0.31.0)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
@@ -115,7 +115,7 @@ GEM
       nokogiri (~> 1.5)
       ruby-hmac
     formatador (0.2.4)
-    guard (2.2.4)
+    guard (2.2.5)
       formatador (>= 0.2.4)
       listen (~> 2.1)
       lumberjack (~> 1.0)
@@ -131,8 +131,7 @@ GEM
       faraday (~> 0.8)
       multi_json (~> 1.7)
     hike (1.2.3)
-    honeybadger (1.9.4)
-      faraday (~> 0.7)
+    honeybadger (1.10.1)
       json
     i18n (0.6.9)
     jquery-rails (3.0.4)
@@ -143,7 +142,7 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.8.1)
-    listen (2.3.1)
+    listen (2.4.0)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -162,12 +161,12 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
-    newrelic_rpm (3.6.9.171)
-    nokogiri (1.6.0)
+    newrelic_rpm (3.7.0.177)
+    nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
-    oj (2.3.0)
-    optionable (0.1.1)
-    origin (1.1.0)
+    oj (2.5.1)
+    optionable (0.2.0)
+    origin (2.0.0)
     polyglot (0.3.3)
     pry (0.9.12.4)
       coderay (~> 1.0)
@@ -200,9 +199,9 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.12.0)
-    rake (10.1.0)
+    rake (10.1.1)
     rb-fsevent (0.9.3)
-    rb-inotify (0.9.2)
+    rb-inotify (0.9.3)
       ffi (>= 0.5.0)
     redis (3.0.6)
     redis-namespace (1.4.1)
@@ -231,18 +230,18 @@ GEM
     rspec-support (3.0.0.beta1)
     ruby-hmac (0.4.0)
     ruby_gntp (0.3.4)
-    sass (3.2.12)
+    sass (3.2.13)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
     shoulda-matchers (2.4.0)
       activesupport (>= 3.0.0)
-    sidekiq (2.17.0)
+    sidekiq (2.17.1)
       celluloid (>= 0.15.2)
       connection_pool (>= 1.0.0)
       json
-      redis (>= 3.0.4)
+      redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
     slim (2.0.2)
       temple (~> 0.6.6)
@@ -278,7 +277,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.38)
-    uglifier (2.3.2)
+    uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.3)
